@@ -6,10 +6,10 @@ import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
-import { 
-  ArrowLeft, 
-  Clock, 
-  Users, 
+import {
+  ArrowLeft,
+  Clock,
+  Users,
   CheckCircle,
   Loader2,
   Ticket, // Add this
@@ -46,7 +46,7 @@ export default function TakeTicket() {
   const { data: myTickets = [], refetch: refetchMyTickets } = useQuery({
     queryKey: ['myTickets', user?.email],
     queryFn: () => base44.entities.QueueTicket.filter(
-      { student_id: user?.email },
+      { student_email: user?.email },
       '-created_date' // Order by most recent
     ),
     enabled: !!user && user.role === 'student', // Only fetch if user is a student
@@ -75,24 +75,24 @@ export default function TakeTicket() {
       if (!department) {
         throw new Error("Selected department not found.");
       }
-      
-      const todayTickets = allTickets.filter(t => 
+
+      const todayTickets = allTickets.filter(t =>
         t.department_id === departmentId &&
         new Date(t.created_date).toDateString() === new Date().toDateString()
       );
-      
+
       const ticketNumber = `${department.name.substring(0, 3).toUpperCase()}-${String(todayTickets.length + 1).padStart(3, '0')}`;
-      
-      const waitingTickets = allTickets.filter(t => 
-        t.department_id === departmentId && 
+
+      const waitingTickets = allTickets.filter(t =>
+        t.department_id === departmentId &&
         (t.status === 'waiting' || t.status === 'in_progress')
       );
-      
+
       const queuePosition = waitingTickets.length + 1;
       const estimatedWaitTime = queuePosition * (department.average_service_time || 15);
 
       return base44.entities.QueueTicket.create({
-        student_id: user.email,
+        student_email: user.email,
         student_name: user.full_name,
         department_id: departmentId,
         department_name: department.name,
@@ -113,7 +113,7 @@ export default function TakeTicket() {
     const deptTickets = allTickets.filter(t => t.department_id === deptId);
     const waiting = deptTickets.filter(t => t.status === 'waiting' || t.status === 'in_progress').length; // Include in_progress in waiting count
     const avgTime = departments.find(d => d.id === deptId)?.average_service_time || 15;
-    
+
     return {
       waiting,
       estimatedWait: waiting * avgTime

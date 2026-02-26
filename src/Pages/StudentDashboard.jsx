@@ -6,11 +6,11 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
-import { 
-  Ticket, 
-  Clock, 
-  Plus, 
-  CheckCircle2, 
+import {
+  Ticket,
+  Clock,
+  Plus,
+  CheckCircle2,
   XCircle,
   AlertCircle,
   TrendingUp,
@@ -42,17 +42,17 @@ export default function StudentDashboard() {
   const { data: myTickets = [], refetch } = useQuery({
     queryKey: ['myTickets', user?.email],
     queryFn: () => base44.entities.QueueTicket.filter(
-      { student_id: user?.email },
+      { student_email: user?.email },
       '-created_date'
     ),
     enabled: !!user,
     refetchInterval: 5000
   });
 
-  const activeTickets = myTickets.filter(t => 
+  const activeTickets = myTickets.filter(t =>
     t.status === 'waiting' || t.status === 'in_progress'
   );
-  const completedTickets = myTickets.filter(t => 
+  const completedTickets = myTickets.filter(t =>
     t.status === 'completed' || t.status === 'cancelled'
   );
 
@@ -73,8 +73,8 @@ export default function StudentDashboard() {
     },
     {
       title: "Completed Today",
-      value: myTickets.filter(t => 
-        t.status === 'completed' && 
+      value: myTickets.filter(t =>
+        t.status === 'completed' &&
         new Date(t.created_date).toDateString() === new Date().toDateString()
       ).length,
       icon: CheckCircle2,
@@ -96,13 +96,13 @@ export default function StudentDashboard() {
           </h1>
           <p className="text-gray-600 mt-1">Manage your queue tickets and track your position</p>
         </div>
-        <Link 
+        <Link
           to={activeTickets.length > 0 ? '#' : createPageUrl("TakeTicket")}
           aria-disabled={activeTickets.length > 0}
           onClick={(e) => activeTickets.length > 0 && e.preventDefault()}
           className={`${activeTickets.length > 0 ? 'cursor-not-allowed' : ''}`}
         >
-          <Button 
+          <Button
             className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
             disabled={activeTickets.length > 0}
             title={activeTickets.length > 0 ? "You can only have one active ticket at a time" : "Take a new ticket"}

@@ -36,7 +36,7 @@ export default function ServingTicket({ tickets, onComplete, onCancel }) {
                   <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <User className="w-4 h-4" />
-                      {ticket.student_id}
+                      {ticket.student_email || ticket.student_id}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />

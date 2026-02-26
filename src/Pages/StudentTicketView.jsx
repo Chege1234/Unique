@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { 
+import {
   Home,
   Clock,
   Users,
@@ -27,7 +27,7 @@ export default function StudentTicketView() {
   const previousStatusRef = useRef(null);
   const notificationShownRef = useRef(false);
   const audioRef = useRef(null);
-  
+
   const urlParams = new URLSearchParams(window.location.search);
   const studentNumber = urlParams.get('student');
 
@@ -38,56 +38,56 @@ export default function StudentTicketView() {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.frequency.value = 800;
       oscillator.type = 'sine';
-      
+
       gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-      
+
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.5);
-      
+
       // Second beep
       setTimeout(() => {
         const oscillator2 = audioContext.createOscillator();
         const gainNode2 = audioContext.createGain();
-        
+
         oscillator2.connect(gainNode2);
         gainNode2.connect(audioContext.destination);
-        
+
         oscillator2.frequency.value = 1000;
         oscillator2.type = 'sine';
-        
+
         gainNode2.gain.setValueAtTime(0.3, audioContext.currentTime);
         gainNode2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-        
+
         oscillator2.start(audioContext.currentTime);
         oscillator2.stop(audioContext.currentTime + 0.5);
       }, 200);
-      
+
       // Third beep
       setTimeout(() => {
         const oscillator3 = audioContext.createOscillator();
         const gainNode3 = audioContext.createGain();
-        
+
         oscillator3.connect(gainNode3);
         gainNode3.connect(audioContext.destination);
-        
+
         oscillator3.frequency.value = 1200;
         oscillator3.type = 'sine';
-        
+
         gainNode3.gain.setValueAtTime(0.4, audioContext.currentTime);
         gainNode3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.7);
-        
+
         oscillator3.start(audioContext.currentTime);
         oscillator3.stop(audioContext.currentTime + 0.7);
       }, 400);
     };
-    
+
     audioRef.current = createNotificationSound;
   }, []);
 
@@ -106,7 +106,7 @@ export default function StudentTicketView() {
 
   const { data: myTickets = [], refetch } = useQuery({
     queryKey: ['myTickets', studentNumber],
-    queryFn: () => base44.entities.QueueTicket.filter({ student_id: studentNumber }, '-created_date'),
+    queryFn: () => base44.entities.QueueTicket.filter({ student_email: `${studentNumber}@student.edu` }, '-created_date'),
     enabled: !!studentNumber,
     refetchInterval: 3000
   });
@@ -135,7 +135,7 @@ export default function StudentTicketView() {
             console.error('Error playing sound:', error);
           }
         }
-        
+
         // Show browser notification
         if ('Notification' in window && Notification.permission === 'granted') {
           new Notification('🎉 It\'s Your Turn!', {
@@ -147,13 +147,13 @@ export default function StudentTicketView() {
             vibrate: [200, 100, 200, 100, 200]
           });
         }
-        
+
         notificationShownRef.current = true;
       }
-      
+
       // Update previous status
       previousStatusRef.current = activeTicket.status;
-      
+
       // Reset notification flag if status changes away from in_progress
       if (activeTicket.status !== 'in_progress') {
         notificationShownRef.current = false;
@@ -178,7 +178,7 @@ export default function StudentTicketView() {
     return (
       <div className="min-h-screen relative flex items-center justify-center p-4">
         {/* Background Image with Overlay */}
-        <div 
+        <div
           className="fixed inset-0 z-0"
           style={{
             backgroundImage: 'url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070)',
@@ -229,7 +229,7 @@ export default function StudentTicketView() {
   return (
     <div className="min-h-screen relative p-4 sm:p-6 md:p-8">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="fixed inset-0 z-0"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070)',
@@ -275,8 +275,8 @@ export default function StudentTicketView() {
             <Bell className="h-5 w-5 text-yellow-600" />
             <AlertDescription className="text-yellow-800">
               <strong>Enable notifications</strong> to get alerted when it's your turn!
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 className="ml-2"
                 onClick={() => Notification.requestPermission()}
@@ -292,11 +292,10 @@ export default function StudentTicketView() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <Card className={`border-none shadow-2xl ${
-              activeTicket.status === 'in_progress' 
-                ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-4 border-orange-400 animate-pulse' 
+            <Card className={`border-none shadow-2xl ${activeTicket.status === 'in_progress'
+                ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-4 border-orange-400 animate-pulse'
                 : 'bg-white/95 backdrop-blur-sm'
-            }`}>
+              }`}>
               <CardHeader className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                   <div className="flex-1">

@@ -7,10 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Com
 import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { 
-  ArrowLeft, 
-  Clock, 
-  Users, 
+import {
+  ArrowLeft,
+  Clock,
+  Users,
   CheckCircle,
   Loader2,
   AlertCircle
@@ -23,7 +23,7 @@ export default function StudentTakeTicket() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [selectedDept, setSelectedDept] = useState(null);
-  
+
   const urlParams = new URLSearchParams(window.location.search);
   const studentNumber = urlParams.get('student');
 
@@ -46,7 +46,7 @@ export default function StudentTakeTicket() {
 
   const { data: myTickets = [] } = useQuery({
     queryKey: ['myTickets', studentNumber],
-    queryFn: () => base44.entities.QueueTicket.filter({ student_id: studentNumber }),
+    queryFn: () => base44.entities.QueueTicket.filter({ student_email: `${studentNumber}@student.edu` }),
     enabled: !!studentNumber
   });
 
@@ -55,24 +55,24 @@ export default function StudentTakeTicket() {
   const createTicketMutation = useMutation({
     mutationFn: async (departmentId) => {
       const department = departments.find(d => d.id === departmentId);
-      
-      const todayTickets = allTickets.filter(t => 
+
+      const todayTickets = allTickets.filter(t =>
         t.department_id === departmentId &&
         new Date(t.created_date).toDateString() === new Date().toDateString()
       );
-      
+
       const ticketNumber = `${department.name.substring(0, 3).toUpperCase()}-${String(todayTickets.length + 1).padStart(3, '0')}`;
-      
-      const waitingTickets = allTickets.filter(t => 
-        t.department_id === departmentId && 
+
+      const waitingTickets = allTickets.filter(t =>
+        t.department_id === departmentId &&
         (t.status === 'waiting' || t.status === 'in_progress')
       );
-      
+
       const queuePosition = waitingTickets.length + 1;
       const estimatedWaitTime = queuePosition * (department.average_service_time || 15);
 
       return base44.entities.QueueTicket.create({
-        student_id: studentNumber,
+        student_email: `${studentNumber}@student.edu`, // Use student_email for the number
         student_name: `Student ${studentNumber}`,
         department_id: departmentId,
         department_name: department.name,
@@ -93,7 +93,7 @@ export default function StudentTakeTicket() {
     const deptTickets = allTickets.filter(t => t.department_id === deptId);
     const waiting = deptTickets.filter(t => t.status === 'waiting').length;
     const avgTime = departments.find(d => d.id === deptId)?.average_service_time || 15;
-    
+
     return {
       waiting,
       estimatedWait: waiting * avgTime
@@ -113,7 +113,7 @@ export default function StudentTakeTicket() {
   if (activeTicket) {
     return (
       <div className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
-        <div 
+        <div
           className="fixed inset-0 z-0"
           style={{
             backgroundImage: 'url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070)',
@@ -150,7 +150,7 @@ export default function StudentTakeTicket() {
 
   return (
     <div className="fixed inset-0 overflow-y-auto">
-      <div 
+      <div
         className="fixed inset-0 z-0"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070)',
