@@ -1,0 +1,59 @@
+{
+  "name": "QueueTicket",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Email of the student who created the ticket"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Name of the student"
+    },
+    "department_id": {
+      "type": "string",
+      "description": "ID of the department"
+    },
+    "department_name": {
+      "type": "string",
+      "description": "Name of the department"
+    },
+    "ticket_number": {
+      "type": "string",
+      "description": "Unique ticket number for the day"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "waiting",
+      "description": "Current status of the ticket"
+    },
+    "served_by": {
+      "type": "string",
+      "description": "Email of staff member who served the ticket"
+    },
+    "served_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the ticket was marked as served"
+    },
+    "queue_position": {
+      "type": "number",
+      "description": "Position in the queue"
+    },
+    "estimated_wait_time": {
+      "type": "number",
+      "description": "Estimated wait time in minutes"
+    }
+  },
+  "required": [
+    "student_id",
+    "department_id",
+    "ticket_number"
+  ]
+}

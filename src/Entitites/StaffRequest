@@ -1,0 +1,42 @@
+{
+  "name": "StaffRequest",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the requester"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "department": {
+      "type": "string",
+      "description": "Requested department"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Status of the request"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or reason for request"
+    }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "department"
+  ]
+}

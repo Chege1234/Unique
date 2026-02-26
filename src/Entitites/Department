@@ -1,0 +1,36 @@
+{
+  "name": "Department",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Department name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of department services"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the department is currently accepting tickets"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon name for the department"
+    },
+    "average_service_time": {
+      "type": "number",
+      "default": 15,
+      "description": "Average time in minutes to serve a ticket"
+    },
+    "color": {
+      "type": "string",
+      "default": "blue",
+      "description": "Color theme for the department"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
