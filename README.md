@@ -22,7 +22,7 @@ The frontend code is all located inside the `src/` directory.
 ## 🗄️ Backend (Supabase Database)
 Because we use a Serverless BaaS (Backend-as-a-Service), the backend configuration lives in your Supabase Dashboard, alongside these key files:
 
-- **`database_schema.sql`**: The blueprint of the backend. It contains the exact SQL commands used to create the tables in your Supabase database (`departments`, `users`, `queue_tickets`, `staff_requests`). This is your reference for how the data is stored.
+- **`database_schema.sql`**: The blueprint of the backend. It contains the exact SQL commands used to create the tables in the Supabase database (`departments`, `users`, `queue_tickets`, `staff_requests`). This is the reference for how the data is stored.
 - **`.env.local`**: Contains the secret keys (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) that act as a bridge, allowing the frontend to talk to the backend.
 
 ## ⚙️ Configuration Files (Root Level)
