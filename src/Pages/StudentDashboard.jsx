@@ -19,8 +19,8 @@ import {
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 
-import ActiveTicketCard from "../components/student/ActiveTicketCard";
-import TicketHistory from "../components/student/TicketHistory";
+import ActiveTicketCard from "../Components/student/ActiveTicketCard";
+import TicketHistory from "../Components/student/TicketHistory";
 
 export default function StudentDashboard() {
   const [user, setUser] = React.useState(null);

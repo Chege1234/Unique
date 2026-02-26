@@ -19,9 +19,9 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import WaitingQueue from "../components/staff/WaitingQueue";
-import ServingTicket from "../components/staff/ServingTicket";
-import CompletedToday from "../components/staff/CompletedToday";
+import WaitingQueue from "../Components/staff/WaitingQueue";
+import ServingTicket from "../Components/staff/ServingTicket";
+import CompletedToday from "../Components/staff/CompletedToday";
 
 export default function StaffDashboard() {
   const navigate = useNavigate();

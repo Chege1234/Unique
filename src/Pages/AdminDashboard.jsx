@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import DepartmentManager from "../components/admin/DepartmentManager";
-import SystemStats from "../components/admin/SystemStats";
-import StaffRequestManager from "../components/admin/StaffRequestManager";
+import DepartmentManager from "../Components/admin/DepartmentManager";
+import SystemStats from "../Components/admin/SystemStats";
+import StaffRequestManager from "../Components/admin/StaffRequestManager";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();

@@ -17,8 +17,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import DepartmentCard from "../components/departments/DepartmentCard";
-import ActiveTicketCard from "../components/student/ActiveTicketCard"; // Add this
+import DepartmentCard from "../Components/departments/DepartmentCard";
+import ActiveTicketCard from "../Components/student/ActiveTicketCard"; // Add this
 
 export default function TakeTicket() {
   const navigate = useNavigate();
