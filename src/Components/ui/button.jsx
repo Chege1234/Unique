@@ -1,2 +1,2 @@
 import React from "react";
-export const Button = React.forwardRef((props, ref) => <div ref={ref} {...props} />);
+export const Button = React.forwardRef((props, ref) => <button ref={ref} {...props} />);
