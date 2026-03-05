@@ -50,7 +50,7 @@ export default function StudentTakeTicket() {
     enabled: !!studentNumber
   });
 
-  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress');
+  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress' || t.status === 'called');
 
   const createTicketMutation = useMutation({
     mutationFn: async (departmentId) => {

@@ -119,7 +119,7 @@ export default function StudentTicketView() {
     }
   });
 
-  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress');
+  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress' || t.status === 'called');
   const completedTickets = myTickets.filter(t => t.status === 'completed' || t.status === 'cancelled');
 
   // Monitor status changes and trigger notification
@@ -162,7 +162,7 @@ export default function StudentTicketView() {
   }, [activeTicket]);
 
   const getStatusBadge = (status) => {
-    if (status === 'in_progress') {
+    if (status === 'in_progress' || status === 'called') {
       return <Badge className="bg-orange-500 text-lg px-4 py-1">🔔 NOW SERVING</Badge>;
     }
     if (status === 'waiting') {
@@ -292,9 +292,9 @@ export default function StudentTicketView() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <Card className={`border-none shadow-2xl ${activeTicket.status === 'in_progress'
-                ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-4 border-orange-400 animate-pulse'
-                : 'bg-white/95 backdrop-blur-sm'
+            <Card className={`border-none shadow-2xl ${(activeTicket.status === 'in_progress' || activeTicket.status === 'called')
+              ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-4 border-orange-400 animate-pulse'
+              : 'bg-white/95 backdrop-blur-sm'
               }`}>
               <CardHeader className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
@@ -342,7 +342,7 @@ export default function StudentTicketView() {
                     </div>
                   </div>
 
-                  {activeTicket.status === 'in_progress' && (
+                  {(activeTicket.status === 'in_progress' || activeTicket.status === 'called') && (
                     <Alert className="border-orange-400 bg-orange-50">
                       <CheckCircle2 className="h-5 w-5 text-orange-600 flex-shrink-0" />
                       <AlertDescription className="text-orange-800 font-semibold text-sm sm:text-base md:text-lg">

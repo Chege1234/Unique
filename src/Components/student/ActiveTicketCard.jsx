@@ -20,7 +20,7 @@ export default function ActiveTicketCard({ ticket, onUpdate }) {
   });
 
   const getStatusBadge = () => {
-    if (ticket.status === 'in_progress') {
+    if (ticket.status === 'in_progress' || ticket.status === 'called') {
       return <Badge className="bg-orange-500">Now Serving</Badge>;
     }
     return <Badge className="bg-blue-500">Waiting</Badge>;
@@ -31,11 +31,10 @@ export default function ActiveTicketCard({ ticket, onUpdate }) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
     >
-      <Card className={`border-none shadow-xl ${
-        ticket.status === 'in_progress' 
-          ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300' 
+      <Card className={`border-none shadow-xl ${(ticket.status === 'in_progress' || ticket.status === 'called')
+          ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300'
           : 'bg-gradient-to-br from-blue-50 to-blue-100'
-      }`}>
+        }`}>
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
@@ -75,7 +74,7 @@ export default function ActiveTicketCard({ ticket, onUpdate }) {
               </div>
             </div>
 
-            {ticket.status === 'in_progress' && (
+            {(ticket.status === 'in_progress' || ticket.status === 'called') && (
               <div className="p-4 bg-orange-100 border-2 border-orange-300 rounded-lg text-center">
                 <CheckCircle2 className="w-8 h-8 text-orange-600 mx-auto mb-2" />
                 <p className="font-semibold text-orange-800">It's your turn! Please proceed to the counter.</p>

@@ -53,7 +53,7 @@ export default function TakeTicket() {
     refetchInterval: 5000 // Keep this updated to reflect real-time status changes
   });
 
-  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress');
+  const activeTicket = myTickets.find(t => t.status === 'waiting' || t.status === 'in_progress' || t.status === 'called');
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],

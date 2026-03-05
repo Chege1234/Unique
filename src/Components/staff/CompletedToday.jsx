@@ -42,7 +42,7 @@ export default function CompletedToday({ tickets }) {
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {ticket.status === 'cancelled' ? 'Cancelled at' : 'Completed at'} {ticket.served_at ? format(new Date(ticket.served_at), 'h:mm a') : format(new Date(ticket.updated_at || ticket.created_at), 'h:mm a')}
+                    {(ticket.status === 'cancelled' || ticket.status === 'skipped') ? 'Cancelled at' : 'Completed at'} {ticket.served_at ? format(new Date(ticket.served_at), 'h:mm a') : format(new Date(ticket.updated_at || ticket.created_at), 'h:mm a')}
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 mt-2">

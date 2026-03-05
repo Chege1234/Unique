@@ -50,7 +50,7 @@ export default function StudentDashboard() {
   });
 
   const activeTickets = myTickets.filter(t =>
-    t.status === 'waiting' || t.status === 'in_progress'
+    t.status === 'waiting' || t.status === 'in_progress' || t.status === 'called'
   );
   const completedTickets = myTickets.filter(t =>
     t.status === 'completed' || t.status === 'cancelled'
