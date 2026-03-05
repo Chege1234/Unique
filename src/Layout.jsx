@@ -58,10 +58,7 @@ export default function Layout({ children, currentPageName }) {
   const navigationItems = getNavigationItems();
 
   const noLayoutPages = ["Home", "StudentEntry", "StudentTakeTicket", "StudentTicketView"];
-
-  if (noLayoutPages.includes(currentPageName)) {
-    return <div>{children}</div>;
-  }
+  const isNoLayoutPage = noLayoutPages.includes(currentPageName);
 
   return (
     <div className="min-h-screen relative bg-[#030014] overflow-hidden text-white font-['Manrope']">
@@ -90,138 +87,143 @@ export default function Layout({ children, currentPageName }) {
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
       `}</style>
 
-      <div className="relative z-10">
-        {/* Header */}
-        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/20 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 sm:h-20">
-              <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform duration-300">
-                  <Ticket className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-lg sm:text-2xl font-extrabold tracking-tight text-white">
-                    Smart<span className="text-purple-400">Queue</span>
-                  </h1>
-                  <p className="text-[10px] sm:text-xs text-blue-300/60 font-medium tracking-wide uppercase">University Services</p>
-                </div>
-              </Link>
+      {isNoLayoutPage ? (
+        <div className="relative z-10">{children}</div>
+      ) : (
+        <div className="relative z-10">
+          {/* Header */}
+          <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/20 backdrop-blur-xl">
+            {/* ... rest of header ... */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16 sm:h-20">
+                <Link to={createPageUrl("Home")} className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <Ticket className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg sm:text-2xl font-extrabold tracking-tight text-white">
+                      Smart<span className="text-purple-400">Queue</span>
+                    </h1>
+                    <p className="text-[10px] sm:text-xs text-blue-300/60 font-medium tracking-wide uppercase">University Services</p>
+                  </div>
+                </Link>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center gap-2">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={item.url}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${location.pathname === item.url
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex items-center gap-2">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.title}
+                      to={item.url}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${location.pathname === item.url
                         ? "bg-white/10 text-white border border-white/20 shadow-[0_0_20px_rgba(168,85,247,0.15)]"
                         : "text-gray-400 hover:text-white hover:bg-white/5"
-                      }`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    <span className="font-semibold text-sm">{item.title}</span>
-                  </Link>
-                ))}
-              </nav>
+                        }`}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-semibold text-sm">{item.title}</span>
+                    </Link>
+                  ))}
+                </nav>
 
-              {/* User Menu */}
-              <div className="hidden md:flex items-center gap-3 lg:gap-4">
-                {user && (
-                  <>
-                    <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-inner">
-                        <span className="text-white text-xs font-bold">
-                          {user.full_name?.[0]?.toUpperCase() || 'U'}
-                        </span>
+                {/* User Menu */}
+                <div className="hidden md:flex items-center gap-3 lg:gap-4">
+                  {user && (
+                    <>
+                      <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl">
+                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-inner">
+                          <span className="text-white text-xs font-bold">
+                            {user.full_name?.[0]?.toUpperCase() || 'U'}
+                          </span>
+                        </div>
+                        <div className="text-left hidden lg:block">
+                          <p className="text-sm font-bold text-white max-w-[120px] truncate leading-none mb-0.5">{user.full_name}</p>
+                          <p className="text-[10px] text-purple-400 font-semibold uppercase tracking-wider">{user.role}</p>
+                        </div>
                       </div>
-                      <div className="text-left hidden lg:block">
-                        <p className="text-sm font-bold text-white max-w-[120px] truncate leading-none mb-0.5">{user.full_name}</p>
-                        <p className="text-[10px] text-purple-400 font-semibold uppercase tracking-wider">{user.role}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleLogout}
-                      className="text-gray-600 hover:text-red-600 hover:bg-red-50 hidden lg:flex"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleLogout}
-                      className="text-gray-600 hover:text-red-600 hover:bg-red-50 lg:hidden"
-                      title="Logout"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </Button>
-                  </>
-                )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="text-gray-600 hover:text-red-600 hover:bg-red-50 hidden lg:flex"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleLogout}
+                        className="text-gray-600 hover:text-red-600 hover:bg-red-50 lg:hidden"
+                        title="Logout"
+                      >
+                        <LogOut className="w-4 h-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                  className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
               </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
             </div>
-          </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 bg-white">
-              <div className="px-4 py-4 space-y-2">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={item.url}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${location.pathname === item.url
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div className="md:hidden border-t border-gray-200 bg-white">
+                <div className="px-4 py-4 space-y-2">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.title}
+                      to={item.url}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${location.pathname === item.url
                         ? "bg-blue-500 text-white"
                         : "text-gray-600 hover:bg-blue-50"
-                      }`}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span className="font-medium">{item.title}</span>
-                  </Link>
-                ))}
-                {user && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center gap-3 px-4 py-2 mb-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-semibold">
-                          {user.full_name?.[0]?.toUpperCase() || 'U'}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{user.full_name}</p>
-                        <p className="text-sm text-gray-500 capitalize">{user.role}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-red-600 hover:bg-red-50"
-                      onClick={handleLogout}
+                        }`}
                     >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                  </div>
-                )}
+                      <item.icon className="w-5 h-5" />
+                      <span className="font-medium">{item.title}</span>
+                    </Link>
+                  ))}
+                  {user && (
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex items-center gap-3 px-4 py-2 mb-2">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-semibold">
+                            {user.full_name?.[0]?.toUpperCase() || 'U'}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{user.full_name}</p>
+                          <p className="text-sm text-gray-500 capitalize">{user.role}</p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-red-600 hover:bg-red-50"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </header>
+            )}
+          </header>
 
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {children}
-        </main>
-      </div>
+          {/* Main Content */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            {children}
+          </main>
+        </div>
+      )}
     </div>
   );
 }

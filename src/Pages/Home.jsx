@@ -11,7 +11,8 @@ import {
   Hash,
   Sparkles,
   Zap,
-  Shield
+  Shield,
+  Circle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,7 +34,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-[calc(100-screen-20)] flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative z-10">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative">
+      {/* Background Glows for No-Layout Pages */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/20 rounded-full blur-[100px]" />
+      </div>
+
       <div className="w-full max-w-4xl">
         {/* Hero Section */}
         <motion.div
