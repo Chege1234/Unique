@@ -4,6 +4,7 @@ import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { User, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 export default function ServingTicket({ tickets, onComplete, onCancel, isCompleting, isCancelling }) {
   if (tickets.length === 0) {
@@ -46,7 +47,7 @@ export default function ServingTicket({ tickets, onComplete, onCancel, isComplet
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-blue-500/50" />
-                      INITIATED {format(new Date(ticket.called_at || ticket.created_at), 'h:mm a')}
+                      INITIATED {format(new Date(ticket.called_at || ticket.created_date), 'h:mm a')}
                     </div>
                   </div>
                 </div>

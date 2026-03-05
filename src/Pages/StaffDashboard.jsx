@@ -109,7 +109,7 @@ export default function StaffDashboard() {
 
   const waitingTickets = allTickets.filter(t => t.status === 'waiting')
     // oldest first for waiting list
-    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
 
   const servingTickets = allTickets.filter(t => t.status === 'in_progress' || t.status === 'called');
 
