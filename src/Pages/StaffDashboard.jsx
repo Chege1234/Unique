@@ -111,10 +111,10 @@ export default function StaffDashboard() {
     // oldest first for waiting list
     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-  const calledTickets = allTickets.filter(t => t.status === 'called');
+  const servingTickets = allTickets.filter(t => t.status === 'in_progress');
 
   const completedToday = allTickets.filter(t =>
-    (t.status === 'served' || t.status === 'skipped') &&
+    (t.status === 'completed' || t.status === 'cancelled') &&
     new Date(t.created_date).toDateString() === new Date().toDateString()
   );
 
@@ -123,8 +123,9 @@ export default function StaffDashboard() {
       if (waitingTickets.length === 0) return;
       const nextTicket = waitingTickets[0]; // Gets the first one because they are sorted created_at asc
       return base44.entities.QueueTicket.update(nextTicket.id, {
-        status: 'called',
-        served_by: user.id || user.email // use ID for correctness if available
+        status: 'in_progress',
+        served_by: user.id || user.email, // use ID for correctness if available
+        called_at: new Date().toISOString()
       });
     },
     onSuccess: () => {
@@ -135,7 +136,7 @@ export default function StaffDashboard() {
   const serveTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
       return base44.entities.QueueTicket.update(ticketId, {
-        status: 'served',
+        status: 'completed',
         served_at: new Date().toISOString()
       });
     },
@@ -147,7 +148,7 @@ export default function StaffDashboard() {
   const skipTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
       return base44.entities.QueueTicket.update(ticketId, {
-        status: 'skipped'
+        status: 'cancelled'
       });
     },
     onSuccess: () => {
@@ -317,7 +318,7 @@ export default function StaffDashboard() {
               <TabsTrigger value="serving" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4">
                 <span className="hidden sm:inline">Currently Calling</span>
                 <span className="sm:hidden">Calling</span>
-                <span className="ml-1">({calledTickets.length})</span>
+                <span className="ml-1">({servingTickets.length})</span>
               </TabsTrigger>
               <TabsTrigger value="completed" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4">
                 <span className="hidden sm:inline">Processed Today</span>
@@ -336,7 +337,7 @@ export default function StaffDashboard() {
 
             <TabsContent value="serving">
               <ServingTicket
-                tickets={calledTickets}
+                tickets={servingTickets}
                 onComplete={(id) => serveTicketMutation.mutate(id)}
                 onCancel={(id) => skipTicketMutation.mutate(id)}
                 isCompleting={serveTicketMutation.isPending}
