@@ -40,7 +40,7 @@ export default function ServingTicket({ tickets, onComplete, onCancel, isComplet
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      Started {format(new Date(ticket.updated_date), 'h:mm a')}
+                      Started {format(new Date(ticket.created_at), 'h:mm a')}
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 mt-2">

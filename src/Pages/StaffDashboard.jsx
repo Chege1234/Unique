@@ -28,6 +28,7 @@ export default function StaffDashboard() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
   useEffect(() => {
@@ -40,6 +41,10 @@ export default function StaffDashboard() {
         }
         const currentUser = await base44.auth.me();
 
+        if (!currentUser) {
+          throw new Error("User data not found");
+        }
+
         if (currentUser.role !== 'staff' && currentUser.role !== 'admin') {
           // Redirect non-staff away
           navigate(createPageUrl("Home"));
@@ -49,20 +54,18 @@ export default function StaffDashboard() {
         // Allow admin to preview staff dashboard
         if (currentUser.role === 'admin') {
           setUser(currentUser);
-          setIsLoading(false);
           return;
         }
 
         if (!currentUser.department) {
-          userRef.current = currentUser;
           setUser(currentUser);
-          setIsLoading(false);
           return;
         }
         setUser(currentUser);
         setSelectedDepartment(currentUser.department);
-      } catch (error) {
-        base44.auth.redirectToLogin(createPageUrl("StaffDashboard"));
+      } catch (err) {
+        console.error("StaffDashboard initialization error:", err);
+        setError(err.message || "Failed to initialize dashboard");
       } finally {
         setIsLoading(false);
       }
@@ -191,8 +194,36 @@ export default function StaffDashboard() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] p-6 text-center bg-white rounded-2xl shadow-xl border border-red-100">
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+          <AlertCircle className="h-8 w-8 text-red-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard Error</h2>
+        <p className="text-gray-600 mb-6 max-w-md">{error}</p>
+        <div className="flex gap-4">
+          <Button onClick={() => window.location.reload()} className="bg-red-600 hover:bg-red-700">
+            Retry Loading
+          </Button>
+          <Button variant="outline" onClick={() => navigate(createPageUrl("Home"))}>
+            Return Home
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
-    return null;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <AlertCircle className="h-12 w-12 text-gray-400 mb-4" />
+        <p className="text-gray-600 italic">User session lost. Please try logging in again.</p>
+        <Button onClick={() => base44.auth.redirectToLogin(createPageUrl("StaffDashboard"))} className="mt-4">
+          Go to Login
+        </Button>
+      </div>
+    );
   }
 
   if (!user.department && user.role !== 'admin') {
