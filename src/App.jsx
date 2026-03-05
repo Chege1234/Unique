@@ -11,6 +11,7 @@ import RequestStaffAccess from './Pages/RequestStaffAccess.jsx';
 import RoleSelection from './Pages/RoleSelection.jsx';
 import StaffDashboard from './Pages/StaffDashboard.jsx';
 import StaffLogin from './Pages/StaffLogin.jsx';
+import Login from './Pages/Login.jsx';
 import StudentDashboard from './Pages/StudentDashboard.jsx';
 import StudentEntry from './Pages/StudentEntry.jsx';
 import StudentTakeTicket from './Pages/StudentTakeTicket.jsx';
@@ -30,6 +31,7 @@ export default function App() {
                     <Route path="/analytics" element={<Layout currentPageName="Analytics"><Analytics /></Layout>} />
                     <Route path="/request-staff-access" element={<Layout currentPageName="RequestStaffAccess"><RequestStaffAccess /></Layout>} />
                     <Route path="/role-selection" element={<Layout currentPageName="RoleSelection"><RoleSelection /></Layout>} />
+                    <Route path="/login" element={<Layout currentPageName="Login"><Login /></Layout>} />
                     <Route path="/staff-dashboard" element={<Layout currentPageName="StaffDashboard"><StaffDashboard /></Layout>} />
                     <Route path="/staff-login" element={<Layout currentPageName="StaffLogin"><StaffLogin /></Layout>} />
                     <Route path="/student-dashboard" element={<Layout currentPageName="StudentDashboard"><StudentDashboard /></Layout>} />

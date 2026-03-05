@@ -39,16 +39,24 @@ export default function StaffDashboard() {
           return;
         }
         const currentUser = await base44.auth.me();
-        
+
+        if (currentUser.role !== 'staff' && currentUser.role !== 'admin') {
+          // Redirect non-staff away
+          navigate(createPageUrl("Home"));
+          return;
+        }
+
         // Allow admin to preview staff dashboard
         if (currentUser.role === 'admin') {
           setUser(currentUser);
           setIsLoading(false);
           return;
         }
-        
+
         if (!currentUser.department) {
-          navigate(createPageUrl("Home"));
+          userRef.current = currentUser;
+          setUser(currentUser);
+          setIsLoading(false);
           return;
         }
         setUser(currentUser);
@@ -77,48 +85,70 @@ export default function StaffDashboard() {
       return base44.entities.QueueTicket.filter({ department_name: activeDepartment }, '-created_date');
     },
     enabled: !!activeDepartment,
-    refetchInterval: 3000
+    // Realtime subscription replaces polling
   });
 
-  const waitingTickets = allTickets.filter(t => t.status === 'waiting');
-  const inProgressTickets = allTickets.filter(t => t.status === 'in_progress');
-  const completedToday = allTickets.filter(t => 
-    t.status === 'completed' &&
+  // Setup Realtime subscription
+  useEffect(() => {
+    if (!activeDepartment) return;
+
+    const channel = base44.entities.QueueTicket._subscribeToDepartmentChanges(activeDepartment, (payload) => {
+      // Invalidate the query when a change happens in this department
+      queryClient.invalidateQueries(['allTickets', activeDepartment]);
+    });
+
+    return () => {
+      if (channel) {
+        base44.entities.QueueTicket._unsubscribe(channel);
+      }
+    };
+  }, [activeDepartment, queryClient]);
+
+  const waitingTickets = allTickets.filter(t => t.status === 'waiting')
+    // oldest first for waiting list
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+  const calledTickets = allTickets.filter(t => t.status === 'called');
+
+  const completedToday = allTickets.filter(t =>
+    (t.status === 'served' || t.status === 'skipped') &&
     new Date(t.created_date).toDateString() === new Date().toDateString()
   );
 
-  const startServingMutation = useMutation({
-    mutationFn: async (ticketId) => {
-      return base44.entities.QueueTicket.update(ticketId, {
-        status: 'in_progress',
-        served_by: user.email
+  const callNextMutation = useMutation({
+    mutationFn: async () => {
+      if (waitingTickets.length === 0) return;
+      const nextTicket = waitingTickets[0]; // Gets the first one because they are sorted created_at asc
+      return base44.entities.QueueTicket.update(nextTicket.id, {
+        status: 'called',
+        served_by: user.id || user.email // use ID for correctness if available
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['allTickets']);
+      queryClient.invalidateQueries(['allTickets', activeDepartment]);
     }
   });
 
-  const completeServingMutation = useMutation({
+  const serveTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
       return base44.entities.QueueTicket.update(ticketId, {
-        status: 'completed',
+        status: 'served',
         served_at: new Date().toISOString()
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['allTickets']);
+      queryClient.invalidateQueries(['allTickets', activeDepartment]);
     }
   });
 
-  const cancelTicketMutation = useMutation({
+  const skipTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
       return base44.entities.QueueTicket.update(ticketId, {
-        status: 'cancelled'
+        status: 'skipped'
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['allTickets']);
+      queryClient.invalidateQueries(['allTickets', activeDepartment]);
     }
   });
 
@@ -131,14 +161,14 @@ export default function StaffDashboard() {
       bgColor: "bg-blue-100"
     },
     {
-      title: "Currently Serving",
-      value: inProgressTickets.length,
+      title: "Currently Calling",
+      value: calledTickets.length,
       icon: TrendingUp,
       color: "text-orange-600",
       bgColor: "bg-orange-100"
     },
     {
-      title: "Completed Today",
+      title: "Processed Today",
       value: completedToday.length,
       icon: CheckCircle2,
       color: "text-green-600",
@@ -254,30 +284,32 @@ export default function StaffDashboard() {
                 <span className="ml-1">({waitingTickets.length})</span>
               </TabsTrigger>
               <TabsTrigger value="serving" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4">
-                <span className="hidden sm:inline">Currently Serving</span>
-                <span className="sm:hidden">Serving</span>
-                <span className="ml-1">({inProgressTickets.length})</span>
+                <span className="hidden sm:inline">Currently Calling</span>
+                <span className="sm:hidden">Calling</span>
+                <span className="ml-1">({calledTickets.length})</span>
               </TabsTrigger>
               <TabsTrigger value="completed" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-4">
-                <span className="hidden sm:inline">Completed Today</span>
+                <span className="hidden sm:inline">Processed Today</span>
                 <span className="sm:hidden">Done</span>
                 <span className="ml-1">({completedToday.length})</span>
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="waiting">
-              <WaitingQueue 
+              <WaitingQueue
                 tickets={waitingTickets}
-                onStartServing={(id) => startServingMutation.mutate(id)}
-                onCancel={(id) => cancelTicketMutation.mutate(id)}
+                onCallNext={() => callNextMutation.mutate()}
+                isCallingNext={callNextMutation.isPending}
               />
             </TabsContent>
 
             <TabsContent value="serving">
-              <ServingTicket 
-                tickets={inProgressTickets}
-                onComplete={(id) => completeServingMutation.mutate(id)}
-                onCancel={(id) => cancelTicketMutation.mutate(id)}
+              <ServingTicket
+                tickets={calledTickets}
+                onComplete={(id) => serveTicketMutation.mutate(id)}
+                onCancel={(id) => skipTicketMutation.mutate(id)}
+                isCompleting={serveTicketMutation.isPending}
+                isCancelling={skipTicketMutation.isPending}
               />
             </TabsContent>
 

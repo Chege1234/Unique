@@ -24,7 +24,7 @@ export const base44 = {
             // Get user role/profile info from a profile table if needed
             // For now, mimicking structure
             const { data: profile } = await supabase
-                .from('users')
+                .from('profiles')
                 .select('*')
                 .eq('id', user.id)
                 .single();
@@ -34,6 +34,13 @@ export const base44 = {
                 email: user.email,
                 role: 'user' // default role
             };
+        },
+        updateMe: async (payload) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("Not authenticated");
+            const { data, error } = await supabase.from('profiles').update(payload).eq('id', user.id).select().single();
+            if (error) throw error;
+            return data;
         },
         logout: async () => {
             await supabase.auth.signOut();
@@ -80,11 +87,31 @@ export const base44 = {
                 const { data, error } = await supabase.from('queue_tickets').update(payload).eq('id', id).select().single();
                 if (error) throw error;
                 return data;
+            },
+            _subscribeToDepartmentChanges: (departmentName, callback) => {
+                const channel = supabase.channel(`public:queue_tickets:${departmentName}`)
+                    .on(
+                        'postgres_changes',
+                        {
+                            event: '*',
+                            schema: 'public',
+                            table: 'queue_tickets',
+                            filter: `department_name=eq.${departmentName}`
+                        },
+                        (payload) => {
+                            callback(payload);
+                        }
+                    )
+                    .subscribe();
+                return channel;
+            },
+            _unsubscribe: (channel) => {
+                supabase.removeChannel(channel);
             }
         },
         User: {
             list: async (orderBy) => {
-                const { data, error } = await applyOrder(supabase.from('users').select('*'), orderBy);
+                const { data, error } = await applyOrder(supabase.from('profiles').select('*'), orderBy);
                 if (error) console.error(error);
                 return data || [];
             }

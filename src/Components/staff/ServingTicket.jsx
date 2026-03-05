@@ -5,7 +5,7 @@ import { Badge } from "@/Components/ui/badge";
 import { User, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { format } from "date-fns";
 
-export default function ServingTicket({ tickets, onComplete, onCancel }) {
+export default function ServingTicket({ tickets, onComplete, onCancel, isCompleting, isCancelling }) {
   if (tickets.length === 0) {
     return (
       <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
@@ -51,17 +51,20 @@ export default function ServingTicket({ tickets, onComplete, onCancel }) {
               <div className="flex gap-2">
                 <Button
                   onClick={() => onComplete(ticket.id)}
+                  disabled={isCompleting}
                   className="bg-green-500 hover:bg-green-600"
                 >
                   <CheckCircle2 className="w-4 h-4 mr-2" />
-                  Complete
+                  Mark as Served
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => onCancel(ticket.id)}
-                  className="text-red-600 hover:bg-red-50"
+                  disabled={isCancelling}
+                  className="text-red-600 hover:bg-red-50 border-red-200"
                 >
-                  <XCircle className="w-4 h-4" />
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Skip Ticket
                 </Button>
               </div>
             </div>

@@ -19,19 +19,49 @@ insert into public.departments (name, description, color, average_service_time) 
 ('Registrar', 'Transcripts and records', 'purple', 10),
 ('Student Life', 'Housing and activities', 'orange', 15);
 
--- 2. Users Table
--- Supabase handles Auth users, but we store extra profile data here.
-create table public.users (
+-- 2. Profiles Table
+-- Stores user roles and profile details, maps to auth.users
+create table public.profiles (
   id uuid references auth.users(id) primary key,
-  email text unique not null,
-  full_name text not null,
+  email text,
+  full_name text,
   role text default 'student' check (role in ('student', 'staff', 'admin')),
   department_id uuid references public.departments(id),
+  department text,
+  phone text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable RLS logic for users (optional but good practice)
--- alter table public.users enable row level security;
+-- Enable RLS logic for profiles
+alter table public.profiles enable row level security;
+
+-- 2a. Profiles RLS Policies
+create policy "Users can view their own profile" on public.profiles
+  for select using (auth.uid() = id);
+
+create policy "Admins can view all profiles" on public.profiles
+  for select using (
+    exists (
+      select 1 from public.profiles where id = auth.uid() and role = 'admin'
+    )
+  );
+
+create policy "Users can update their own profile" on public.profiles
+  for update using (auth.uid() = id);
+
+-- 2b. Auto-create Profile Trigger
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, full_name, role)
+  values (new.id, new.email, coalesce(new.raw_user_meta_data->>'full_name', ''), 'student');
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
 
 -- 3. Queue Tickets Table
 create table public.queue_tickets (
@@ -42,10 +72,10 @@ create table public.queue_tickets (
   department_id uuid references public.departments(id) not null,
   department_name text not null,
   ticket_number text not null,
-  status text default 'waiting' check (status in ('waiting', 'in_progress', 'completed', 'cancelled')),
+  status text default 'waiting' check (status in ('waiting', 'called', 'served', 'skipped', 'in_progress', 'completed', 'cancelled')),
   queue_position integer,
   estimated_wait_time integer,
-  served_by uuid references public.users(id),
+  served_by uuid references public.profiles(id),
   served_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   created_date timestamp with time zone default timezone('utc'::text, now()) not null
