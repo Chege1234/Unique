@@ -1,36 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-border: #e2e8f0;
-  --color-input: #f1f5f9;
-  --color-ring: #2563eb;
-  --color-background: #f8fafc;
-  --color-foreground: #0f172a;
+  --color-border: #1e293b;
+  --color-input: #0f172a;
+  --color-ring: #6366f1;
+  --color-background: #020617;
+  --color-foreground: #f8fafc;
 
-  --color-primary: #1e293b;
+  --color-primary: #6366f1;
   --color-primary-foreground: #ffffff;
 
-  --color-secondary: #64748b;
+  --color-secondary: #334155;
   --color-secondary-foreground: #ffffff;
 
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
 
-  --color-muted: #94a3b8;
-  --color-muted-foreground: #64748b;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
 
-  --color-accent: #2563eb;
+  --color-accent: #8b5cf6;
   --color-accent-foreground: #ffffff;
 
-  --color-popover: #ffffff;
-  --color-popover-foreground: #0f172a;
+  --color-popover: #0f172a;
+  --color-popover-foreground: #f8fafc;
 
-  --color-card: #ffffff;
-  --color-card-foreground: #0f172a;
+  --color-card: #0f172a;
+  --color-card-foreground: #f8fafc;
 
-  --radius-lg: 0.75rem;
-  --radius-md: 0.5rem;
-  --radius-sm: 0.25rem;
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.5rem;
 }
 
 @layer base {
@@ -51,13 +51,14 @@
 }
 
 @layer utilities {
-  .university-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
 
   .nav-link {
-    @apply text-slate-600 hover:text-slate-900 font-medium transition-colors;
+    @apply text-slate-400 hover:text-white font-medium transition-colors;
   }
 }
