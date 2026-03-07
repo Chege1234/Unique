@@ -405,18 +405,22 @@ export default function StudentTicketView() {
                   <div className="flex flex-col sm:flex-row gap-6 pt-4">
                     <Button
                       variant="ghost"
-                      className="flex-1 h-16 text-blue-100/20 hover:text-red-400 hover:bg-red-500/10 font-black uppercase tracking-[0.3em] text-[10px] rounded-2xl transition-all"
-                      onClick={() => navigate(createPageUrl("StudentEntry"))}
+                      className="flex-1 h-16 text-blue-100/20 hover:text-white hover:bg-white/5 font-black uppercase tracking-[0.3em] text-[10px] rounded-2xl transition-all"
+                      onClick={() => navigate(createPageUrl("Home"))}
                     >
-                      ABORT MONITORING
+                      BACK TO HOME
                     </Button>
                     <Button
-                      className="flex-[2] bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/20 text-white hover:text-red-400 h-16 px-8 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all"
-                      onClick={() => cancelMutation.mutate(activeTicket.id)}
+                      className="flex-[2] bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-500 h-16 px-8 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-red-900/20"
+                      onClick={() => {
+                        if (confirm("Are you sure you want to cancel this ticket?")) {
+                          cancelMutation.mutate(activeTicket.id);
+                        }
+                      }}
                       disabled={cancelMutation.isPending}
                     >
-                      <XCircle className="w-4 h-4 mr-3" />
-                      TERMINATE SESSION
+                      <XCircle className="w-5 h-5 mr-3" />
+                      CANCEL TICKET
                     </Button>
                   </div>
                 </div>
