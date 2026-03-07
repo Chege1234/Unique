@@ -6,22 +6,34 @@ const SelectContext = createContext();
 export const Select = ({ children, value, onValueChange, ...props }) => {
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         setSelectedValue(value);
     }, [value]);
 
+    // Click-outside lives on the container (trigger + content) so item clicks aren't eaten
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => document.removeEventListener("mousedown", handleClickOutside);
+        }
+    }, [open]);
+
     const handleValueChange = (newValue) => {
         setSelectedValue(newValue);
-        if (onValueChange) {
-            onValueChange(newValue);
-        }
+        if (onValueChange) onValueChange(newValue);
         setOpen(false);
     };
 
     return (
         <SelectContext.Provider value={{ open, setOpen, selectedValue, handleValueChange }}>
-            <div {...props}>
+            <div ref={containerRef} {...props}>
                 {children}
             </div>
         </SelectContext.Provider>
@@ -30,28 +42,10 @@ export const Select = ({ children, value, onValueChange, ...props }) => {
 
 export const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
     const { open, setOpen } = useContext(SelectContext);
-    const triggerRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (triggerRef.current && !triggerRef.current.contains(event.target)) {
-                setOpen(false);
-            }
-        };
-
-        if (open) {
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => document.removeEventListener("mousedown", handleClickOutside);
-        }
-    }, [open, setOpen]);
 
     return (
         <button
-            ref={(node) => {
-                triggerRef.current = node;
-                if (typeof ref === 'function') ref(node);
-                else if (ref) ref.current = node;
-            }}
+            ref={ref}
             type="button"
             onClick={() => setOpen(!open)}
             className={cn(
@@ -63,7 +57,7 @@ export const SelectTrigger = React.forwardRef(({ className, children, ...props }
             {children}
             <svg
                 className={cn(
-                    "h-4 w-4 opacity-50 transition-transform",
+                    "h-4 w-4 opacity-50 transition-transform ml-2",
                     open && "rotate-180"
                 )}
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,12 +77,9 @@ export const SelectValue = ({ placeholder }) => {
 
     useEffect(() => {
         if (selectedValue) {
-            // This will be set by SelectItem when it renders
             const timer = setTimeout(() => {
                 const selectedElement = document.querySelector(`[data-value="${selectedValue}"]`);
-                if (selectedElement) {
-                    setDisplayValue(selectedElement.textContent);
-                }
+                if (selectedElement) setDisplayValue(selectedElement.textContent);
             }, 0);
             return () => clearTimeout(timer);
         } else {
