@@ -38,10 +38,29 @@ export default function Login() {
         checkSession();
 
         // Listen for auth events
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-                const returnUrl = searchParams.get('returnUrl') || '/';
-                navigate(returnUrl);
+                const returnUrl = searchParams.get('returnUrl');
+                if (returnUrl) {
+                    navigate(returnUrl);
+                    return;
+                }
+                // Check user role in profiles table
+                try {
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', session.user.id)
+                        .single();
+
+                    if (profile?.role === 'staff' || profile?.role === 'admin') {
+                        navigate('/staff-dashboard');
+                    } else {
+                        navigate('/');
+                    }
+                } catch {
+                    navigate('/');
+                }
             }
         });
 
