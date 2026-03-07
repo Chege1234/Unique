@@ -175,8 +175,8 @@ export default function StaffDashboard() {
       title: "Active Calls",
       value: servingTickets.length,
       icon: TrendingUp,
-      color: "text-purple-400",
-      bgColor: "bg-purple-500/10"
+      color: "text-[#0d6cf2]",
+      bgColor: "bg-[#0d6cf2]/10"
     },
     {
       title: "Handled Today",
@@ -187,10 +187,10 @@ export default function StaffDashboard() {
     },
     {
       title: "Efficiency",
-      value: `${Math.round(completedToday.length > 0 ? 95 : 0)}%`,
+      value: `${Math.round(completedToday.length > 0 ? 98 : 0)}%`,
       icon: Clock,
-      color: "text-amber-400",
-      bgColor: "bg-amber-500/10"
+      color: "text-blue-300",
+      bgColor: "bg-blue-500/10"
     }
   ];
 
@@ -242,17 +242,17 @@ export default function StaffDashboard() {
           animate={{ opacity: 1, x: 0 }}
         >
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
-            Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Terminal</span>
+            Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#0d6cf2]">Terminal</span>
           </h1>
           <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             {user.role === 'admin' && (
-              <Badge className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-bold uppercase tracking-widest px-3 py-1 backdrop-blur-md">
+              <Badge className="bg-[#0d6cf2]/20 text-[#0d6cf2] border border-[#0d6cf2]/30 text-xs font-bold uppercase tracking-widest px-3 py-1 backdrop-blur-md">
                 👑 Authority Override
               </Badge>
             )}
             <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-1 pr-4">
               <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-purple-400" />
+                <Building2 className="w-5 h-5 text-[#0d6cf2]" />
               </div>
               <Select value={selectedDepartment || ""} onValueChange={setSelectedDepartment}>
                 <SelectTrigger className="w-full sm:w-64 bg-transparent border-none text-white font-bold h-10 focus:ring-0">
@@ -271,7 +271,7 @@ export default function StaffDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-[10px] text-blue-400 font-black uppercase tracking-widest hover:bg-white/5"
+                className="text-[10px] text-[#0d6cf2] font-black uppercase tracking-widest hover:bg-white/5"
                 onClick={() => {
                   const dept = departments.find(d => d.name === user.department || d.id === user.department);
                   if (dept) setSelectedDepartment(dept.id);
@@ -321,20 +321,20 @@ export default function StaffDashboard() {
 
           <Tabs defaultValue="waiting" className="space-y-8">
             <TabsList className="bg-white/5 border border-white/10 p-1.5 rounded-2xl h-14 sm:w-auto grid grid-cols-3 sm:inline-flex backdrop-blur-md">
-              <TabsTrigger value="waiting" className="rounded-xl data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-900/40 text-xs font-bold tracking-widest uppercase transition-all duration-300">
+              <TabsTrigger value="waiting" className="rounded-xl data-[state=active]:bg-[#0d6cf2]/20 data-[state=active]:text-[#0d6cf2] data-[state=active]:border-[#0d6cf2]/30 text-xs font-bold tracking-widest uppercase transition-all duration-300">
                 <span className="hidden sm:inline">Waiting List</span>
                 <span className="sm:hidden">Waiting</span>
-                <Badge className="ml-2 bg-white/10 text-white border-none text-[10px] tabular-nums">{waitingTickets.length}</Badge>
+                <Badge className="ml-2 bg-[#0d6cf2]/10 text-[#0d6cf2] border-none text-[10px] tabular-nums">{waitingTickets.length}</Badge>
               </TabsTrigger>
-              <TabsTrigger value="serving" className="rounded-xl data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-900/40 text-xs font-bold tracking-widest uppercase transition-all duration-300">
+              <TabsTrigger value="serving" className="rounded-xl data-[state=active]:bg-[#0d6cf2] data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-900/40 text-xs font-bold tracking-widest uppercase transition-all duration-300">
                 <span className="hidden sm:inline">Live Session</span>
                 <span className="sm:hidden">Session</span>
                 <Badge className="ml-2 bg-white/10 text-white border-none text-[10px] tabular-nums">{servingTickets.length}</Badge>
               </TabsTrigger>
-              <TabsTrigger value="completed" className="rounded-xl data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-green-900/40 text-xs font-bold tracking-widest uppercase transition-all duration-300">
+              <TabsTrigger value="completed" className="rounded-xl data-[state=active]:bg-green-600/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 text-xs font-bold tracking-widest uppercase transition-all duration-300">
                 <span className="hidden sm:inline">Terminal History</span>
                 <span className="sm:hidden">History</span>
-                <Badge className="ml-2 bg-white/10 text-white border-none text-[10px] tabular-nums">{completedToday.length}</Badge>
+                <Badge className="ml-2 bg-green-500/10 text-green-400 border-none text-[10px] tabular-nums">{completedToday.length}</Badge>
               </TabsTrigger>
             </TabsList>
 

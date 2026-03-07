@@ -28,7 +28,7 @@ export default function ServingTicket({ tickets, onComplete, onCancel, isComplet
     <div className="grid gap-6">
       {tickets.map((ticket) => (
         <Card key={ticket.id} className="glass-card border-none overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
           <CardContent className="p-8">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="flex items-center gap-6">

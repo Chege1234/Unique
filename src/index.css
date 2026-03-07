@@ -1,39 +1,40 @@
 @import "tailwindcss";
 
 @theme {
-  --color-border: hsl(240 5.9% 15%);
-  --color-input: hsl(240 5.9% 15%);
-  --color-ring: hsl(263.4 70% 50.4%);
-  --color-background: hsl(240 10% 3.9%);
-  --color-foreground: hsl(0 0% 98%);
+  --color-border: #e2e8f0;
+  --color-input: #f1f5f9;
+  --color-ring: #2563eb;
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
 
-  --color-primary: hsl(263.4 70% 50.4%);
-  --color-primary-foreground: hsl(210 40% 98%);
+  --color-primary: #1e293b;
+  --color-primary-foreground: #ffffff;
 
-  --color-secondary: hsl(240 4.8% 15.9%);
-  --color-secondary-foreground: hsl(0 0% 98%);
+  --color-secondary: #64748b;
+  --color-secondary-foreground: #ffffff;
 
-  --color-destructive: hsl(0 62.8% 30.6%);
-  --color-destructive-foreground: hsl(210 40% 98%);
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
 
-  --color-muted: hsl(240 4.8% 15.9%);
-  --color-muted-foreground: hsl(240 5% 64.9%);
+  --color-muted: #94a3b8;
+  --color-muted-foreground: #64748b;
 
-  --color-accent: hsl(240 4.8% 15.9%);
-  --color-accent-foreground: hsl(0 0% 98%);
+  --color-accent: #2563eb;
+  --color-accent-foreground: #ffffff;
 
-  --color-popover: hsl(240 10% 3.9%);
-  --color-popover-foreground: hsl(0 0% 98%);
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
 
-  --color-card: hsl(240 10% 3.9%);
-  --color-card-foreground: hsl(0 0% 98%);
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
 
   --radius-lg: 0.75rem;
-  --radius-md: calc(0.75rem - 2px);
-  --radius-sm: calc(0.75rem - 4px);
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
 }
 
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -50,19 +51,13 @@
 }
 
 @layer utilities {
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  .university-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   }
 
-  .premium-gradient {
-    background: linear-gradient(135deg, hsl(263.4 70% 50.4%), hsl(240 10% 3.9%));
-  }
-
-  .text-glow {
-    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  .nav-link {
+    @apply text-slate-600 hover:text-slate-900 font-medium transition-colors;
   }
 }

@@ -83,14 +83,14 @@ export default function Login() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-full max-w-lg"
             >
-                <Card className="glass-card border-none overflow-hidden group">
+                <Card className="glass-card border-none overflow-hidden group rounded-[2rem]">
                     <CardHeader className="text-center pb-8 border-b border-white/5">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-400 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500">
+                        <div className="w-20 h-20 bg-[#0d6cf2] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform duration-500">
                             <Shield className="w-10 h-10 text-white" />
                         </div>
-                        <CardTitle className="text-4xl font-black text-white tracking-tight">Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">Terminal</span></CardTitle>
-                        <CardDescription className="text-blue-100/40 mt-2 text-lg font-medium">
-                            Authenticate to access the central management node.
+                        <CardTitle className="text-4xl font-black text-white tracking-tight">Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#0d6cf2]">Terminal</span></CardTitle>
+                        <CardDescription className="text-blue-100/40 mt-2 text-lg font-medium uppercase tracking-[0.2em]">
+                            Secure Node Access
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-10">
@@ -107,7 +107,7 @@ export default function Login() {
 
                         <form onSubmit={handleLogin} className="space-y-8">
                             <div className="space-y-3">
-                                <Label htmlFor="email" className="text-[10px] font-black text-blue-400 uppercase tracking-[0.25em] ml-1">
+                                <Label htmlFor="email" className="text-[10px] font-black text-[#0d6cf2] uppercase tracking-[0.25em] ml-2">
                                     Access Protocol ID
                                 </Label>
                                 <Input
@@ -117,12 +117,12 @@ export default function Login() {
                                     placeholder="name@university.edu"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/10 rounded-2xl focus:ring-blue-500/50 focus:border-blue-500/50 text-lg font-bold"
+                                    className="h-16 bg-white/5 border-white/10 text-white placeholder:text-white/10 rounded-2xl focus:ring-[#0d6cf2]/50 focus:border-[#0d6cf2]/50 text-xl font-bold px-6"
                                 />
                             </div>
 
                             <div className="space-y-3">
-                                <Label htmlFor="password" title="password" className="text-[10px] font-black text-blue-400 uppercase tracking-[0.25em] ml-1">
+                                <Label htmlFor="password" title="password" className="text-[10px] font-black text-[#0d6cf2] uppercase tracking-[0.25em] ml-2">
                                     Encrypted Key
                                 </Label>
                                 <Input
@@ -132,14 +132,14 @@ export default function Login() {
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="h-14 bg-white/5 border-white/10 text-white placeholder:text-white/10 rounded-2xl focus:ring-blue-500/50 focus:border-blue-500/50 text-lg font-bold"
+                                    className="h-16 bg-white/5 border-white/10 text-white placeholder:text-white/10 rounded-2xl focus:ring-[#0d6cf2]/50 focus:border-[#0d6cf2]/50 text-xl font-bold px-6"
                                 />
                             </div>
 
                             <Button
                                 type="submit"
                                 disabled={isLoading || !email || !password}
-                                className="w-full h-16 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white font-black uppercase tracking-[0.3em] text-sm rounded-2xl shadow-2xl shadow-blue-500/20 transition-all active:scale-[0.98]"
+                                className="w-full h-18 bg-[#0d6cf2] hover:bg-[#0b5ed7] text-white font-black uppercase tracking-[0.3em] text-sm rounded-2xl shadow-2xl shadow-blue-500/20 transition-all active:scale-[0.98]"
                             >
                                 {isLoading ? (
                                     <>

@@ -61,14 +61,14 @@ export default function StudentDashboard() {
       title: "Active Tickets",
       value: activeTickets.length,
       icon: Ticket,
-      color: "text-blue-600",
+      color: "text-[#0d6cf2]",
       bgColor: "bg-blue-100"
     },
     {
       title: "In Progress",
       value: myTickets.filter(t => t.status === 'in_progress').length,
       icon: TrendingUp,
-      color: "text-green-600",
+      color: "text-green-500",
       bgColor: "bg-green-100"
     },
     {
@@ -78,8 +78,8 @@ export default function StudentDashboard() {
         new Date(t.created_date).toDateString() === new Date().toDateString()
       ).length,
       icon: CheckCircle2,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100"
+      color: "text-blue-400",
+      bgColor: "bg-blue-100"
     }
   ];
 
@@ -95,9 +95,9 @@ export default function StudentDashboard() {
           animate={{ opacity: 1, x: 0 }}
         >
           <h1 className="text-4xl font-extrabold text-white tracking-tight">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">{user.full_name.split(' ')[0]}!</span>
+            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#0d6cf2]">{user.full_name.split(' ')[0]}!</span>
           </h1>
-          <p className="text-blue-200/50 mt-2 font-medium">Your personal queue command center</p>
+          <p className="text-blue-200/50 mt-2 font-medium uppercase tracking-widest text-xs">Your personal queue command center</p>
         </motion.div>
 
         <motion.div
@@ -111,7 +111,7 @@ export default function StudentDashboard() {
             className={`${activeTickets.length > 0 ? 'cursor-not-allowed' : ''}`}
           >
             <Button
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-xl shadow-purple-900/20 px-8 py-6 rounded-2xl font-bold uppercase tracking-wider disabled:opacity-50"
+              className="bg-[#0d6cf2] hover:bg-[#0b5ed7] text-white shadow-xl shadow-blue-500/20 px-8 py-6 rounded-2xl font-bold uppercase tracking-wider disabled:opacity-50 transition-all transform hover:-translate-y-1"
               disabled={activeTickets.length > 0}
             >
               {activeTickets.length > 0 ? (
@@ -146,8 +146,8 @@ export default function StudentDashboard() {
                     <p className="text-xs font-bold text-blue-200/40 uppercase tracking-widest mb-1">{stat.title}</p>
                     <p className="text-4xl font-black text-white tracking-tighter">{stat.value}</p>
                   </div>
-                  <div className={`w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-purple-500/50 transition-colors`}>
-                    <stat.icon className={`w-7 h-7 ${stat.color.replace('text-', 'text-glow text-')}`} />
+                  <div className={`w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-[#0d6cf2]/50 transition-colors`}>
+                    <stat.icon className={`w-7 h-7 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
@@ -184,14 +184,14 @@ export default function StudentDashboard() {
               <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                 <AlertCircle className="w-10 h-10 text-blue-300/40" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">No Active Tickets</h3>
+              <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">All Caught Up</h3>
               <p className="text-blue-100/40 mb-10 max-w-sm mx-auto font-medium">
                 You're currently not in any queue. Ready to experience our seamless service?
               </p>
               <Link to={createPageUrl("TakeTicket")}>
-                <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-2xl px-10 py-7 text-lg font-bold group">
+                <Button className="bg-[#0d6cf2] hover:bg-[#0b5ed7] text-white border-none rounded-2xl px-10 py-7 text-lg font-bold group shadow-lg shadow-blue-500/20">
                   <Plus className="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform" />
-                  INITIATE SESSION
+                  NEW SESSION
                 </Button>
               </Link>
             </CardContent>
