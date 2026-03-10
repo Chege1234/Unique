@@ -1,33 +1,134 @@
-# Smart Queue - Project Structure
+# Smart Queue
 
-This document explains how the files in this project are organized and what each part does.
+A smart digital queue management system for universities, built with **React + Vite** on the frontend and **Supabase** as the backend. Students join queues and track their ticket status in real time, while staff manage their service windows from a dedicated dashboard.
 
-Since we are using **Supabase** for the backend, we don't need a traditional "backend" server folder full of Node.js or Python code. Instead, the "backend" is managed directly by Supabase, and our frontend talks directly to the database securely.
+---
 
-## 📂 Frontend (React + Vite)
-The frontend code is all located inside the `src/` directory.
+## ✨ Features
 
-- **`src/main.jsx` & `src/App.jsx`**: The starting points of the React application. They set up routing and global providers.
-- **`src/Pages/`**: Contains the full screen views for different user roles.
-  - `AdminDashboard.jsx`, `StaffDashboard.jsx`, `StudentDashboard.jsx`: The main control panels for each type of user.
-  - `TakeTicket.jsx`, `StudentTakeTicket.jsx`: The screens where students join the queue.
-  - `RequestStaffAccess.jsx`, `StaffLogin.jsx`: Authentication and staff onboarding screens.
-- **`src/Components/`**: Smaller, reusable UI pieces like Buttons, Cards, or specific sections like the `StaffRequestManager`.
-- **`src/api/`**: 
-  - `supabaseClient.js`: Initializes the connection to our Supabase database.
-  - `base44Client.js`: Contains the helper functions that the UI uses to fetch/update data from Supabase (e.g., creating a ticket).
-- **`src/Entities/` (or `Entitites/`)**: Contains JSON files that describe the shape of our data (like what fields a `Department` or `QueueTicket` has).
-- **`src/index.css` & `src/Layout.jsx`**: Global styles and the main structural layout (navbar, sidebar) of the app.
+- 🎟️ **Digital Ticketing** — Students take a numbered ticket and see their live position in the queue
+- 📣 **Real-time Updates** — Queue positions and ticket statuses update instantly via Supabase Realtime
+- ⏱️ **Auto-Cancellation** — Tickets are automatically cancelled with a 30-second countdown if the student doesn't respond when called
+- 🏢 **Multi-Department Support** — Staff can switch between departments from the dashboard
+- 👩‍💼 **Staff Dashboard** — Call next ticket, mark as served, and view serving history
+- 📊 **Analytics** — Admins can view queue metrics and activity reports
+- 🔐 **Role-Based Access** — Separate flows for Students, Staff, and Admins
+- 🛡️ **Rate Limiting & Validation** — Client-side request throttling and form input validation
 
-## 🗄️ Backend (Supabase Database)
-Because we use a Serverless BaaS (Backend-as-a-Service), the backend configuration lives in your Supabase Dashboard, alongside these key files:
+---
 
-- **`database_schema.sql`**: The blueprint of the backend. It contains the exact SQL commands used to create the tables in the Supabase database (`departments`, `users`, `queue_tickets`, `staff_requests`). This is the reference for how the data is stored.
-- **`.env.local`**: Contains the secret keys (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) that act as a bridge, allowing the frontend to talk to the backend.
+## 📂 Project Structure
 
-## ⚙️ Configuration Files (Root Level)
-These are standard tool configuration files that sit in the main folder:
-- **`package.json`**: Lists all the external libraries the app uses (React, Tailwind, Supabase) and script commands (`npm run dev`).
-- **`vite.config.js`**: Configuration for Vite, the build tool that runs the frontend.
-- **`tailwind.config.js` & `postcss.config.js`**: Settings for Tailwind CSS, which handles the styling of the app.
-- **`index.html`**: The single HTML page that loads the React application.
+```
+smart-queue/
+├── index.html               # Single HTML entry point
+├── vite.config.js           # Vite build configuration
+├── tailwind.config.js       # Tailwind CSS configuration
+├── postcss.config.js        # PostCSS configuration
+├── package.json             # Dependencies and npm scripts
+├── database_schema.sql      # SQL schema for Supabase tables
+└── src/
+    ├── main.jsx             # React app entry point
+    ├── App.jsx              # Root component with routing
+    ├── Layout.jsx           # Global layout (navbar, sidebar)
+    ├── index.css            # Global styles
+    ├── Pages/               # Full-page views
+    │   ├── Home.jsx                  # Landing / home page
+    │   ├── RoleSelection.jsx         # Choose between Student / Staff
+    │   ├── Login.jsx                 # Staff login page (Supabase Auth)
+    │   ├── StaffLogin.jsx            # Alternative staff login entry
+    │   ├── RequestStaffAccess.jsx    # New staff onboarding / access request
+    │   ├── StudentEntry.jsx          # Student name/ID entry
+    │   ├── TakeTicket.jsx            # Department selection for ticket
+    │   ├── StudentTakeTicket.jsx     # Ticket issuance screen
+    │   ├── StudentDashboard.jsx      # Student's live queue view
+    │   ├── StudentTicketView.jsx     # Detailed ticket status + auto-cancel overlay
+    │   ├── StaffDashboard.jsx        # Staff queue management panel
+    │   ├── AdminDashboard.jsx        # Admin management panel
+    │   └── Analytics.jsx            # Admin analytics & reporting
+    ├── Components/          # Reusable UI components
+    │   ├── ErrorBoundary.jsx         # Global error boundary
+    │   ├── ui/                       # Base UI primitives
+    │   │   ├── select.jsx            # Fully-implemented dropdown (used for dept switching)
+    │   │   ├── button.jsx, card.jsx, dialog.jsx, tabs.jsx, badge.jsx, ...
+    │   ├── admin/                    # Admin-specific components
+    │   ├── staff/                    # Staff-specific components
+    │   ├── student/                  # Student-specific components
+    │   ├── departments/              # Department-related components
+    │   └── common/                   # Shared cross-role components
+    ├── api/
+    │   ├── supabaseClient.js        # Supabase client initialisation
+    │   └── base44Client.js          # Data access helpers (CRUD wrappers)
+    ├── constants/
+    │   └── index.js                 # App-wide constants (departments, statuses, etc.)
+    ├── hooks/
+    │   └── useAuth.js               # Custom hook for Supabase Auth state
+    ├── utils/
+    │   ├── rateLimit.js             # Client-side rate limiting utility
+    │   └── validation.js            # Form validation helpers
+    └── entities/                    # Data shape definitions (JSON)
+```
+
+---
+
+## 🗄️ Backend (Supabase)
+
+The project uses **Supabase** as a serverless Backend-as-a-Service — no separate server required.
+
+| Resource | Purpose |
+|---|---|
+| `database_schema.sql` | SQL blueprint for all database tables (`departments`, `users`, `queue_tickets`, `staff_requests`) |
+| `.env.local` | Secret keys: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` |
+| Supabase Realtime | Powers live queue position and status updates |
+| Supabase Auth | Handles staff authentication (email/password) |
+| Row-Level Security (RLS) | Enforces access rules directly in the database |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js ≥ 18
+- A Supabase project (free tier works)
+
+### 1. Clone and install
+```bash
+git clone https://github.com/your-org/smart-queue.git
+cd smart-queue
+npm install
+```
+
+### 2. Configure environment variables
+Create a `.env.local` file in the project root:
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. Set up the database
+Run the SQL in `database_schema.sql` inside your Supabase SQL Editor to create all required tables.
+
+### 4. Run locally
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:5173`.
+
+---
+
+## 👥 User Roles
+
+| Role | How to Access | Capabilities |
+|---|---|---|
+| **Student** | Open the app → Select "Student" | Take a ticket, track queue position, receive call notifications |
+| **Staff** | Login with Supabase Auth | Call next ticket, mark served, switch departments |
+| **Admin** | Admin dashboard login | Manage departments, users, view analytics |
+
+---
+
+## 🔧 Key Technical Decisions
+
+- **Supabase Realtime** subscriptions are used in `StudentTicketView.jsx` and `StaffDashboard.jsx` to push database changes to the browser instantly.
+- **Auto-cancellation** is triggered when a ticket reaches `in_progress` status; a 30-second timer starts and cancels the ticket if the student doesn't confirm.
+- **Department switching** in `StaffDashboard.jsx` uses a fully implemented custom `Select` component (`src/Components/ui/select.jsx`).
+- **Rate limiting** (`src/utils/rateLimit.js`) prevents abuse of ticket creation and other actions.
