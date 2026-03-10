@@ -88,6 +88,7 @@ export default function StaffDashboard() {
       return base44.entities.QueueTicket.filter({ department_id: activeDepartmentId }, '-created_date');
     },
     enabled: !!activeDepartmentId,
+    refetchInterval: 5000, // Poll every 5s so student cancellations are reflected promptly
   });
 
   useEffect(() => {

@@ -369,7 +369,34 @@ export default function StudentTicketView() {
           </Alert>
         )}
 
+        {/* No active ticket — prompt to get a new one (e.g. staff cancelled it) */}
+        {!activeTicket && completedTickets.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Card className="glass-card border-none overflow-hidden">
+              <CardContent className="p-10 text-center">
+                <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                  <TicketIcon className="w-8 h-8 text-blue-100/30" />
+                </div>
+                <h2 className="text-2xl font-black text-white tracking-tight mb-3 uppercase">No Active Ticket</h2>
+                <p className="text-blue-100/40 font-medium mb-8">
+                  You don't have an active ticket right now. You can join the queue again below.
+                </p>
+                <Button
+                  onClick={() => navigate(createPageUrl("StudentTakeTicket") + `?student=${studentNumber}`)}
+                  className="w-full h-16 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-black uppercase tracking-[0.3em] text-sm rounded-2xl shadow-2xl shadow-purple-500/20 transition-all active:scale-[0.98]"
+                >
+                  Get a New Ticket
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {activeTicket && (
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
