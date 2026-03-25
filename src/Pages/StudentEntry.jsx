@@ -18,19 +18,17 @@ export default function StudentEntry() {
     e.preventDefault();
     setError("");
 
-    // Validate 8-digit number
-    if (!/^\d{8}$/.test(studentNumber)) {
-      setError("Please enter a valid 8-digit student number");
+    if (!/^20\d{6}$/.test(studentNumber)) {
+      setError("Incorrect student number. Must be 8 digits starting with 20.");
       return;
     }
 
-    // Navigate to ticket selection with student number
     navigate(createPageUrl("StudentTakeTicket") + `?student=${studentNumber}`);
   };
 
   const handleCheckTicket = () => {
-    if (!/^\d{8}$/.test(studentNumber)) {
-      setError("Please enter a valid 8-digit student number");
+    if (!/^20\d{6}$/.test(studentNumber)) {
+      setError("Incorrect student number. Must be 8 digits starting with 20.");
       return;
     }
     navigate(createPageUrl("StudentTicketView") + `?student=${studentNumber}`);
@@ -72,7 +70,7 @@ export default function StudentEntry() {
                     id="studentNumber"
                     type="text"
                     maxLength={8}
-                    placeholder="00000000"
+                    placeholder="20xxxxxx"
                     value={studentNumber}
                     onChange={(e) => {
                       setStudentNumber(e.target.value.replace(/\D/g, ''));

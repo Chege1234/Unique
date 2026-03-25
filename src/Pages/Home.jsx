@@ -16,12 +16,16 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   const [studentNumber, setStudentNumber] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleGetTicket = () => {
-    if (studentNumber.length === 8) {
-      navigate(createPageUrl("StudentTakeTicket") + `?student=${studentNumber}`);
+    if (!/^20\d{6}$/.test(studentNumber)) {
+      setError("Incorrect student number. Must be 8 digits starting with 20.");
+      return;
     }
+    setError("");
+    navigate(createPageUrl("StudentTakeTicket") + `?student=${studentNumber}`);
   };
 
   return (
@@ -64,12 +68,18 @@ export default function Home() {
               </label>
               <Input
                 type="text"
-                placeholder="12345678"
+                placeholder="20xxxxxx"
                 maxLength={8}
                 value={studentNumber}
-                onChange={(e) => setStudentNumber(e.target.value.replace(/\D/g, ""))}
+                onChange={(e) => {
+                  setStudentNumber(e.target.value.replace(/\D/g, ""));
+                  setError("");
+                }}
                 className="h-14 bg-white/5 border-white/10 text-white text-center text-xl font-mono tracking-widest focus:ring-primary focus:border-primary rounded-xl"
               />
+              {error && (
+                <p className="text-red-400 text-[10px] font-black uppercase tracking-widest text-center mt-2">{error}</p>
+              )}
             </div>
 
             <Button

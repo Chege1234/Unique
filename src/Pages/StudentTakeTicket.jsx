@@ -28,7 +28,7 @@ export default function StudentTakeTicket() {
   const studentNumber = urlParams.get('student');
 
   React.useEffect(() => {
-    if (!studentNumber || !/^\d{8}$/.test(studentNumber)) {
+    if (!studentNumber || !/^20\d{6}$/.test(studentNumber)) {
       navigate(createPageUrl("StudentEntry"));
     }
   }, [studentNumber, navigate]);
