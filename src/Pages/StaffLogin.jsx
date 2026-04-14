@@ -82,13 +82,22 @@ export default function StaffLogin() {
         }
       } catch (error) {
         console.error("Auth check error:", error);
+        setConfigMessage("Connection error. Please refresh.");
       } finally {
         setIsLoading(false);
       }
     };
 
+    const timeoutId = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+        setConfigMessage("Request timed out. Please check your connection.");
+      }
+    }, 10000);
+
     checkAuthAndConfigure();
-  }, [navigate]);
+    return () => clearTimeout(timeoutId);
+  }, [navigate, isLoading]);
 
   const handleLogin = () => {
     base44.auth.redirectToLogin(createPageUrl("StaffLogin"));
