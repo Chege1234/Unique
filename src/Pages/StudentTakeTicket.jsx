@@ -56,33 +56,11 @@ export default function StudentTakeTicket() {
 
   const createTicketMutation = useMutation({
     mutationFn: async (departmentId) => {
-      const department = departments.find(d => d.id === departmentId);
-
-      const todayTickets = allTickets.filter(t =>
-        t.department_id === departmentId &&
-        new Date(t.created_date).toDateString() === new Date().toDateString()
+      return base44.entities.QueueTicket.createViaRpc(
+        `${studentNumber}@student.edu`,
+        `Student ${studentNumber}`,
+        departmentId
       );
-
-      const ticketNumber = `${department.name.substring(0, 3).toUpperCase()}-${String(todayTickets.length + 1).padStart(3, '0')}`;
-
-      const waitingTickets = allTickets.filter(t =>
-        t.department_id === departmentId &&
-        (t.status === 'waiting' || t.status === 'in_progress')
-      );
-
-      const queuePosition = waitingTickets.length + 1;
-      const estimatedWaitTime = queuePosition * (department.average_service_time || 15);
-
-      return base44.entities.QueueTicket.create({
-        student_email: `${studentNumber}@student.edu`, // Use student_email for the number
-        student_name: `Student ${studentNumber}`,
-        department_id: departmentId,
-        department_name: department.name,
-        ticket_number: ticketNumber,
-        status: 'waiting',
-        queue_position: queuePosition,
-        estimated_wait_time: estimatedWaitTime
-      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['myTickets']);
@@ -91,7 +69,11 @@ export default function StudentTakeTicket() {
     },
     onError: (error) => {
       console.error('Failed to create ticket:', error);
-      toast.error('Failed to create ticket. Please try again.');
+      if (error.message?.includes('already has an active ticket')) {
+        toast.error('You already have an active ticket. Cancel it first.');
+      } else {
+        toast.error('Failed to create ticket. Please try again.');
+      }
     }
   });
 

@@ -93,9 +93,20 @@ export const base44 = {
             create: async (payload) => {
                 const { data, error } = await supabase.from('queue_tickets').insert([payload]).select().single();
                 if (error) {
-                    // If insert succeeded but select failed (e.g. RLS blocks read-back),
-                    // check if it's a read error vs an actual insert failure
                     console.error('Ticket create error:', error);
+                    throw error;
+                }
+                return data;
+            },
+            // Server-side ticket creation with atomic ticket numbering (prevents duplicates)
+            createViaRpc: async (studentEmail, studentName, departmentId) => {
+                const { data, error } = await supabase.rpc('create_queue_ticket', {
+                    p_student_email: studentEmail,
+                    p_student_name: studentName,
+                    p_department_id: departmentId
+                });
+                if (error) {
+                    console.error('RPC create ticket error:', error);
                     throw error;
                 }
                 return data;
@@ -103,6 +114,17 @@ export const base44 = {
             update: async (id, payload) => {
                 const { data, error } = await supabase.from('queue_tickets').update(payload).eq('id', id).select().single();
                 if (error) throw error;
+                return data;
+            },
+            // Server-side cancel (bypasses RLS for anonymous students)
+            cancel: async (ticketId) => {
+                const { data, error } = await supabase.rpc('cancel_ticket', {
+                    p_ticket_id: ticketId
+                });
+                if (error) {
+                    console.error('RPC cancel ticket error:', error);
+                    throw error;
+                }
                 return data;
             },
             _subscribeToDepartmentChanges: (departmentName, callback) => {

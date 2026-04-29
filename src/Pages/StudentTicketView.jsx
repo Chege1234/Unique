@@ -106,10 +106,13 @@ export default function StudentTicketView() {
   });
 
   const cancelMutation = useMutation({
-    mutationFn: (ticketId) => base44.entities.QueueTicket.update(ticketId, { status: 'cancelled' }),
+    mutationFn: (ticketId) => base44.entities.QueueTicket.cancel(ticketId),
     onSuccess: () => {
       queryClient.invalidateQueries(['myTickets']);
       refetch();
+    },
+    onError: (error) => {
+      console.error('Failed to cancel ticket:', error);
     }
   });
 
