@@ -238,33 +238,33 @@ export default function StaffDashboard() {
   }
 
   return (
-    <div className="space-y-10 relative z-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="space-y-8 relative z-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">
-            Staff <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#0d6cf2]">Counter</span>
+          <h1 className="text-2xl md:text-4xl font-semibold text-foreground tracking-tight">
+            Staff Counter
           </h1>
           <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             {user.role === 'admin' && (
-              <Badge className="bg-[#0d6cf2]/20 text-[#0d6cf2] border border-[#0d6cf2]/30 text-xs font-bold uppercase tracking-widest px-3 py-1 backdrop-blur-md">
-                👑 Admin Override
+              <Badge className="bg-primary/15 text-primary border border-primary/30 text-xs px-3 py-1">
+                Admin override
               </Badge>
             )}
 
             {/* Current Department Display with Dropdown */}
             <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-400 font-medium uppercase tracking-wider">
+              <span className="text-sm text-muted-foreground font-medium">
                 Serving:
               </span>
               <div className="relative">
                 <Select value={selectedDepartment || ""} onValueChange={setSelectedDepartment}>
-                  <SelectTrigger className="bg-white/10 border border-white/20 hover:border-white/30 text-white font-bold rounded-xl px-4 h-10 min-w-[200px] focus:ring-2 focus:ring-[#0d6cf2] transition-all">
+                  <SelectTrigger className="bg-card border border-border hover:border-border/90 text-foreground font-medium rounded-xl px-4 h-10 min-w-[200px]">
                     <SelectValue placeholder="Select Department..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border border-white/20 text-white rounded-xl shadow-2xl">
+                  <SelectContent className="bg-card border border-border text-foreground rounded-xl">
                     {departments.map(dept => (
                       <SelectItem
                         key={dept.id}
@@ -288,7 +288,7 @@ export default function StaffDashboard() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-xs text-[#0d6cf2] hover:text-[#0d6cf2]/80 font-semibold uppercase tracking-wider hover:bg-white/5 rounded-xl px-4"
+                    className="text-xs text-primary hover:text-primary/80 font-semibold hover:bg-muted rounded-xl px-4"
                     onClick={() => {
                       if (assignedDept) setSelectedDepartment(assignedDept.id);
                     }}
@@ -312,7 +312,7 @@ export default function StaffDashboard() {
         </Card>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.title}
@@ -320,12 +320,12 @@ export default function StaffDashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="glass-card border-none group hover:bg-white/10 transition-all duration-300">
-                  <CardContent className="p-6">
+                <Card className="glass-card border-none group transition-all duration-300">
+                  <CardContent className="p-5">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-black text-blue-200/30 uppercase tracking-[0.2em] mb-1 truncate">{stat.title}</p>
-                        <p className="text-2xl font-black text-white tracking-tight">{stat.value}</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1 truncate">{stat.title}</p>
+                        <p className="text-2xl font-semibold text-foreground tracking-tight">{stat.value}</p>
                       </div>
                       <div className={`w-12 h-12 ${stat.bgColor} border border-white/5 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform`}>
                         <stat.icon className={`w-6 h-6 ${stat.color}`} />

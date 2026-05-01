@@ -31,7 +31,7 @@ export default function StudentTakeTicket() {
 
   React.useEffect(() => {
     if (!studentNumber || !/^20\d{6}$/.test(studentNumber)) {
-      navigate(createPageUrl("StudentEntry"));
+      navigate(createPageUrl("Home"));
     }
   }, [studentNumber, navigate]);
 
@@ -116,10 +116,10 @@ export default function StudentTakeTicket() {
               </p>
               <Button
                 variant="outline"
-                className="w-full h-16 bg-white/5 border-white/10 hover:bg-white/10 text-white font-black uppercase tracking-[0.3em] text-sm rounded-2xl transition-all"
+                className="w-full h-12"
                 onClick={() => navigate(createPageUrl("StudentTicketView") + `?student=${studentNumber}`)}
               >
-                VIEW ACTIVE TICKET
+                View Active Ticket
               </Button>
             </Card>
           </motion.div>
@@ -129,23 +129,23 @@ export default function StudentTakeTicket() {
   }
 
   return (
-    <div className="min-h-screen relative z-10 px-4 py-12 md:py-20">
-      <div className="max-w-7xl mx-auto space-y-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <div className="min-h-screen relative z-10 px-4 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto space-y-8 md:space-y-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-6 mb-4">
+            <div className="flex items-center gap-4 mb-3">
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navigate(createPageUrl("StudentEntry"))}
-                className="bg-white/5 border-white/10 hover:bg-white/10 text-white w-14 h-14 rounded-2xl transition-all active:scale-90"
+                onClick={() => navigate(createPageUrl("Home"))}
+                className="w-11 h-11 rounded-xl"
               >
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-5xl font-black text-white tracking-tight">Choose a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Department</span></h1>
-                <p className="text-blue-100/40 font-bold uppercase tracking-[0.25em] text-sm mt-3 flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]" />
+                <h1 className="text-2xl md:text-4xl font-semibold text-foreground tracking-tight">Choose a Department</h1>
+                <p className="text-muted-foreground text-sm mt-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-400" />
                   Student ID: {studentNumber}
                 </p>
               </div>
@@ -173,61 +173,61 @@ export default function StudentTakeTicket() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <Card className="glass-card border-none overflow-hidden relative group max-w-3xl mx-auto">
-              <CardHeader className="text-center p-12 border-b border-white/5">
-                <p className="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em] mb-4">You're almost there!</p>
-                <CardTitle className="text-4xl font-black text-white tracking-tight leading-none uppercase">Confirm Ticket</CardTitle>
+            <Card className="glass-card border-none overflow-hidden relative max-w-3xl mx-auto">
+              <CardHeader className="text-center p-6 md:p-10 border-b border-border/70">
+                <p className="text-xs font-medium text-primary mb-2">You're almost there</p>
+                <CardTitle className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight">Confirm Ticket</CardTitle>
               </CardHeader>
-              <CardContent className="p-12">
-                <div className="space-y-10">
-                  <div className="flex items-center gap-8 p-10 bg-white/5 rounded-3xl border border-white/10">
-                    <div className={`w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-2xl flex-shrink-0`}>
+              <CardContent className="p-6 md:p-10">
+                <div className="space-y-6 md:space-y-8">
+                  <div className="flex items-center gap-4 p-5 md:p-7 bg-card rounded-2xl border border-border">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/20 rounded-2xl flex items-center justify-center text-primary text-2xl font-semibold flex-shrink-0">
                       {selectedDept.name[0]}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-3xl font-black text-white tracking-tight uppercase">{selectedDept.name}</h3>
-                      <p className="text-blue-100/30 font-bold text-xs uppercase tracking-widest mt-2">{selectedDept.description}</p>
+                      <h3 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">{selectedDept.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{selectedDept.description}</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-8">
-                    <div className="p-8 bg-white/5 rounded-3xl border border-white/5 flex flex-col items-center">
-                      <Users className="w-8 h-8 text-purple-400 mb-3 opacity-30" />
-                       <span className="text-[10px] font-black text-blue-100/20 uppercase tracking-widest mb-2">People waiting</span>
-                      <p className="text-4xl font-black text-white">{getDepartmentStats(selectedDept.id).waiting}</p>
+                  <div className="grid grid-cols-2 gap-4 md:gap-6">
+                    <div className="p-4 md:p-6 bg-card rounded-2xl border border-border flex flex-col items-center">
+                      <Users className="w-6 h-6 text-primary mb-2 opacity-80" />
+                      <span className="text-xs text-muted-foreground mb-1">People waiting</span>
+                      <p className="text-2xl md:text-3xl font-semibold text-foreground">{getDepartmentStats(selectedDept.id).waiting}</p>
                     </div>
-                    <div className="p-8 bg-white/5 rounded-3xl border border-white/5 flex flex-col items-center">
-                      <Clock className="w-8 h-8 text-blue-400 mb-3 opacity-30" />
-                      <span className="text-[10px] font-black text-blue-100/20 uppercase tracking-widest mb-2">Est. wait</span>
-                      <p className="text-4xl font-black text-white">
-                        {getDepartmentStats(selectedDept.id).estimatedWait}<span className="text-sm ml-1 text-blue-400">m</span>
+                    <div className="p-4 md:p-6 bg-card rounded-2xl border border-border flex flex-col items-center">
+                      <Clock className="w-6 h-6 text-primary mb-2 opacity-80" />
+                      <span className="text-xs text-muted-foreground mb-1">Estimated wait</span>
+                      <p className="text-2xl md:text-3xl font-semibold text-foreground">
+                        {getDepartmentStats(selectedDept.id).estimatedWait}<span className="text-sm ml-1 text-muted-foreground">m</span>
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-6 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <Button
                       variant="ghost"
-                      className="flex-1 h-20 text-blue-100/20 hover:text-white hover:bg-white/5 font-black uppercase tracking-[0.3em] text-[10px] rounded-2xl transition-all"
+                      className="flex-1 h-12"
                       onClick={() => setSelectedDept(null)}
                       disabled={createTicketMutation.isPending}
                     >
-                      GO BACK
+                      Go Back
                     </Button>
                     <Button
-                      className="flex-[2] bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 h-20 text-white font-black uppercase tracking-[0.3em] text-sm rounded-2xl shadow-2xl shadow-purple-900/40 transition-all active:scale-[0.98]"
+                      className="flex-[2] h-12"
                       onClick={handleConfirm}
                       disabled={createTicketMutation.isPending}
                     >
                       {createTicketMutation.isPending ? (
                         <>
-                          <Loader2 className="w-6 h-6 mr-4 animate-spin" />
-                          PROCESSING...
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Processing...
                         </>
                       ) : (
                         <>
-                          <CheckCircle className="w-6 h-6 mr-4" />
-                          CONFIRM & GET TICKET
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Confirm & Get Ticket
                         </>
                       )}
                     </Button>

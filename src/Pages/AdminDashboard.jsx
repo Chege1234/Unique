@@ -125,27 +125,27 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-12 relative z-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+    <div className="space-y-10 relative z-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tight uppercase">Central <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Command</span></h1>
-          <p className="text-blue-100/30 font-medium text-lg mt-3 uppercase tracking-widest">Admin panel for departments, staff, and system insights</p>
+          <h1 className="text-2xl md:text-4xl font-semibold text-foreground tracking-tight">Admin Dashboard</h1>
+          <p className="text-muted-foreground text-sm md:text-base mt-2">Manage departments, staff access, and system operations.</p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl("StaffDashboard"))}
-            className="text-blue-100/40 hover:text-white hover:bg-white/5 font-black uppercase tracking-[0.3em] text-[10px] rounded-2xl px-6 h-14 transition-all"
+            className="h-11"
           >
-            <Users className="w-4 h-4 mr-3" />
-            STAFF PERSPECTIVE
+            <Users className="w-4 h-4 mr-2" />
+            Staff View
           </Button>
           <Button
             onClick={() => navigate(createPageUrl("Analytics"))}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-black uppercase tracking-[0.3em] text-[10px] rounded-2xl px-8 h-14 shadow-2xl shadow-purple-900/40 transition-all"
+            className="h-11"
           >
-            <BarChart3 className="w-4 h-4 mr-3" />
-            ANALYTICS
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Analytics
           </Button>
         </div>
       </div>
@@ -160,11 +160,11 @@ export default function AdminDashboard() {
             transition={{ delay: index * 0.1 }}
           >
             <Card className="glass-card border-none overflow-hidden relative group">
-              <CardContent className="p-8">
+              <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] mb-3">{stat.title}</p>
-                    <p className="text-4xl font-black text-white tracking-tighter">{stat.value}</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-2">{stat.title}</p>
+                    <p className="text-3xl font-semibold text-foreground tracking-tight">{stat.value}</p>
                   </div>
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-500`}>
                     <stat.icon className={`w-6 h-6 text-purple-400`} />

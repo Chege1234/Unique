@@ -148,11 +148,11 @@ export default function Analytics() {
   };
 
   return (
-    <div className="space-y-12 relative z-10 pb-20">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+    <div className="space-y-10 relative z-10 pb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tight uppercase">Intelligence <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Engine</span></h1>
-          <p className="text-blue-100/30 font-medium text-lg mt-3 uppercase tracking-widest text-balance">Ticket and queue activity across all departments</p>
+          <h1 className="text-2xl md:text-4xl font-semibold text-foreground tracking-tight">Analytics</h1>
+          <p className="text-muted-foreground text-sm md:text-base mt-2 text-balance">Ticket and queue activity across all departments.</p>
         </div>
       </div>
 
@@ -166,11 +166,11 @@ export default function Analytics() {
             transition={{ delay: index * 0.1 }}
           >
             <Card className="glass-card border-none overflow-hidden relative group">
-              <CardContent className="p-8">
+              <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] mb-3">{metric.title}</p>
-                    <p className="text-4xl font-black text-white tracking-tighter">{metric.value}</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-2">{metric.title}</p>
+                    <p className="text-3xl font-semibold text-foreground tracking-tight">{metric.value}</p>
                   </div>
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-purple-500/10`}>
                     <metric.icon className={`w-6 h-6 text-purple-400`} />

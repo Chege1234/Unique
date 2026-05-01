@@ -15,7 +15,6 @@ export function createPageUrl(name) {
         StaffDashboard: "/staff-dashboard",
         StaffLogin: "/staff-login",
         StudentDashboard: "/student-dashboard",
-        StudentEntry: "/student-entry",
         StudentTakeTicket: "/student-take-ticket",
         StudentTicketView: "/student-ticket-view",
         TakeTicket: "/take-ticket",

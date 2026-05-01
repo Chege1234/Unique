@@ -16,7 +16,6 @@ const StaffDashboard = lazy(() => import('./Pages/StaffDashboard.jsx'));
 const StaffLogin = lazy(() => import('./Pages/StaffLogin.jsx'));
 const Login = lazy(() => import('./Pages/Login.jsx'));
 const StudentDashboard = lazy(() => import('./Pages/StudentDashboard.jsx'));
-const StudentEntry = lazy(() => import('./Pages/StudentEntry.jsx'));
 const StudentTakeTicket = lazy(() => import('./Pages/StudentTakeTicket.jsx'));
 const StudentTicketView = lazy(() => import('./Pages/StudentTicketView.jsx'));
 const TakeTicket = lazy(() => import('./Pages/TakeTicket.jsx'));
@@ -59,7 +58,6 @@ export default function App() {
                             <Route path="/staff-dashboard" element={<Layout currentPageName="StaffDashboard"><StaffDashboard /></Layout>} />
                             <Route path="/staff-login" element={<Layout currentPageName="StaffLogin"><StaffLogin /></Layout>} />
                             <Route path="/student-dashboard" element={<Layout currentPageName="StudentDashboard"><StudentDashboard /></Layout>} />
-                            <Route path="/student-entry" element={<Layout currentPageName="StudentEntry"><StudentEntry /></Layout>} />
                             <Route path="/student-take-ticket" element={<Layout currentPageName="StudentTakeTicket"><StudentTakeTicket /></Layout>} />
                             <Route path="/student-ticket-view" element={<Layout currentPageName="StudentTicketView"><StudentTicketView /></Layout>} />
                             <Route path="/take-ticket" element={<Layout currentPageName="TakeTicket"><TakeTicket /></Layout>} />

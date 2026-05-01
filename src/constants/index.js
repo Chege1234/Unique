@@ -25,7 +25,6 @@ export const ROUTES = {
     STAFF_DASHBOARD: '/staff-dashboard',
     STAFF_LOGIN: '/staff-login',
     STUDENT_DASHBOARD: '/student-dashboard',
-    STUDENT_ENTRY: '/student-entry',
     STUDENT_TAKE_TICKET: '/student-take-ticket',
     STUDENT_TICKET_VIEW: '/student-ticket-view',
     TAKE_TICKET: '/take-ticket',

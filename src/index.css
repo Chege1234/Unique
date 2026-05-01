@@ -1,32 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-border: #1e293b;
-  --color-input: #0f172a;
-  --color-ring: #6366f1;
-  --color-background: #020617;
-  --color-foreground: #f8fafc;
+  --color-border: #243147;
+  --color-input: #111d31;
+  --color-ring: #0e74ff;
+  --color-background: #080f1b;
+  --color-foreground: #e6edf8;
 
-  --color-primary: #6366f1;
+  --color-primary: #0e74ff;
   --color-primary-foreground: #ffffff;
 
-  --color-secondary: #334155;
-  --color-secondary-foreground: #ffffff;
+  --color-secondary: #1a263c;
+  --color-secondary-foreground: #d8e4f7;
 
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
 
-  --color-muted: #1e293b;
-  --color-muted-foreground: #94a3b8;
+  --color-muted: #121f33;
+  --color-muted-foreground: #90a1bb;
 
-  --color-accent: #8b5cf6;
+  --color-accent: #4f9cff;
   --color-accent-foreground: #ffffff;
 
-  --color-popover: #0f172a;
-  --color-popover-foreground: #f8fafc;
+  --color-popover: #0e1729;
+  --color-popover-foreground: #e6edf8;
 
-  --color-card: #0f172a;
-  --color-card-foreground: #f8fafc;
+  --color-card: #0e1729;
+  --color-card-foreground: #e6edf8;
 
   --radius-lg: 1.5rem;
   --radius-md: 1rem;
@@ -46,19 +46,30 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: 'Manrope', sans-serif;
+    font-family: "Manrope", sans-serif;
+    background-image: radial-gradient(
+        circle at 10% -10%,
+        rgba(14, 116, 255, 0.2),
+        transparent 35%
+      ),
+      radial-gradient(circle at 90% 0%, rgba(79, 156, 255, 0.12), transparent 30%);
+    text-rendering: optimizeLegibility;
   }
 }
 
 @layer utilities {
   .glass-card {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+      180deg,
+      rgba(22, 35, 57, 0.85) 0%,
+      rgba(14, 24, 41, 0.9) 100%
+    );
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(80, 104, 138, 0.35);
+    box-shadow: 0 16px 32px -18px rgba(1, 8, 20, 0.9);
   }
 
   .nav-link {
-    @apply text-slate-400 hover:text-white font-medium transition-colors;
+    @apply text-slate-300 hover:text-white font-medium transition-colors;
   }
 }
