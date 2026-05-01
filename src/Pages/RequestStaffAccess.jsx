@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/Components/ui/button";
@@ -30,17 +30,27 @@ export default function RequestStaffAccess() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const { data: departments = [], isLoading: isLoadingDepartments } = useQuery({
+    queryKey: ['departments'],
+    queryFn: () => base44.entities.Department.filter({ is_active: true })
+  });
+
   const createRequestMutation = useMutation({
     mutationFn: async (data) => {
       const { password, confirm_password, ...rest } = data;
+      // We are dropping the password since the staff_requests table doesn't have a column for it.
+      // (The admin will create the account separately).
       return base44.entities.StaffRequest.create({
         ...rest,
-        password_hash: password,
         status: 'pending'
       });
     },
     onSuccess: () => {
       setShowSuccess(true);
+    },
+    onError: (error) => {
+      setPasswordError(error.message || 'Failed to submit request. Please try again.');
+      console.error('Failed to submit staff request:', error);
     }
   });
 
@@ -187,12 +197,15 @@ export default function RequestStaffAccess() {
                         <SelectValue placeholder="Select department..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Admissions">Admissions</SelectItem>
-                        <SelectItem value="Financial Aid">Financial Aid</SelectItem>
-                        <SelectItem value="Registrar">Registrar</SelectItem>
-                        <SelectItem value="Student Affairs">Student Affairs</SelectItem>
-                        <SelectItem value="IT Support">IT Support</SelectItem>
-                        <SelectItem value="Library">Library</SelectItem>
+                        {isLoadingDepartments ? (
+                          <SelectItem value="loading" disabled>Loading departments...</SelectItem>
+                        ) : departments.length > 0 ? (
+                          departments.map((dept) => (
+                            <SelectItem key={dept.id} value={dept.name}>{dept.name}</SelectItem>
+                          ))
+                        ) : (
+                          <SelectItem value="none" disabled>No active departments</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
