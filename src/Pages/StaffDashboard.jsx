@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -36,12 +36,12 @@ export default function StaffDashboard() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const authenticated = await base44.auth.isAuthenticated();
+        const authenticated = await api.auth.isAuthenticated();
         if (!authenticated) {
-          base44.auth.redirectToLogin(createPageUrl("StaffDashboard"));
+          api.auth.redirectToLogin(createPageUrl("StaffDashboard"));
           return;
         }
-        const currentUser = await base44.auth.me();
+        const currentUser = await api.auth.me();
 
         if (!currentUser) {
           throw new Error("User data not found");
@@ -65,7 +65,7 @@ export default function StaffDashboard() {
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.list(),
+    queryFn: () => api.entities.Department.list(),
     enabled: !!user
   });
 
@@ -85,7 +85,7 @@ export default function StaffDashboard() {
     queryKey: ['allTickets', activeDepartmentId],
     queryFn: () => {
       if (!activeDepartmentId) return [];
-      return base44.entities.QueueTicket.filter({ department_id: activeDepartmentId }, '-created_date');
+      return api.entities.QueueTicket.filter({ department_id: activeDepartmentId }, '-created_date');
     },
     enabled: !!activeDepartmentId,
     refetchInterval: 5000, // Poll every 5s so student cancellations are reflected promptly
@@ -94,13 +94,13 @@ export default function StaffDashboard() {
   useEffect(() => {
     if (!activeDepartmentName) return;
 
-    const channel = base44.entities.QueueTicket._subscribeToDepartmentChanges(activeDepartmentName, (payload) => {
+    const channel = api.entities.QueueTicket._subscribeToDepartmentChanges(activeDepartmentName, (payload) => {
       queryClient.invalidateQueries(['allTickets', activeDepartmentId]);
     });
 
     return () => {
       if (channel) {
-        base44.entities.QueueTicket._unsubscribe(channel);
+        api.entities.QueueTicket._unsubscribe(channel);
       }
     };
   }, [activeDepartmentName, activeDepartmentId, queryClient]);
@@ -119,7 +119,7 @@ export default function StaffDashboard() {
     mutationFn: async () => {
       if (waitingTickets.length === 0) return;
       const nextTicket = waitingTickets[0];
-      return base44.entities.QueueTicket.update(nextTicket.id, {
+      return api.entities.QueueTicket.update(nextTicket.id, {
         status: 'in_progress',
         served_by: user.id || user.email,
         called_at: new Date().toISOString()
@@ -136,7 +136,7 @@ export default function StaffDashboard() {
 
   const serveTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
-      return base44.entities.QueueTicket.update(ticketId, {
+      return api.entities.QueueTicket.update(ticketId, {
         status: 'completed',
         served_at: new Date().toISOString()
       });
@@ -153,7 +153,7 @@ export default function StaffDashboard() {
 
   const skipTicketMutation = useMutation({
     mutationFn: async (ticketId) => {
-      return base44.entities.QueueTicket.update(ticketId, {
+      return api.entities.QueueTicket.update(ticketId, {
         status: 'cancelled'
       });
     },
@@ -230,7 +230,7 @@ export default function StaffDashboard() {
       <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
         <AlertCircle className="h-12 w-12 text-gray-400 mb-4" />
         <p className="text-gray-600 italic">User session lost. Please try logging in again.</p>
-        <Button onClick={() => base44.auth.redirectToLogin(createPageUrl("StaffDashboard"))} className="mt-4">
+        <Button onClick={() => api.auth.redirectToLogin(createPageUrl("StaffDashboard"))} className="mt-4">
           Go to Login
         </Button>
       </div>
@@ -383,3 +383,4 @@ export default function StaffDashboard() {
     </div>
   );
 }
+

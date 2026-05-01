@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -21,7 +21,7 @@ export default function RoleSelection() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const currentUser = await base44.auth.me();
+                const currentUser = await api.auth.me();
                 setUser(currentUser);
             } catch (e) {
                 // Not authenticated, redirect to home to login
@@ -33,11 +33,11 @@ export default function RoleSelection() {
 
     const { data: departments = [] } = useQuery({
         queryKey: ['departments'],
-        queryFn: () => base44.entities.Department.filter({ is_active: true })
+        queryFn: () => api.entities.Department.filter({ is_active: true })
     });
 
     const updateUserMutation = useMutation({
-        mutationFn: (data) => base44.auth.updateMe(data),
+        mutationFn: (data) => api.auth.updateMe(data),
         onSuccess: (updatedUser) => {
             if (updatedUser.department) {
                 navigate(createPageUrl("StaffDashboard"));
@@ -140,3 +140,4 @@ export default function RoleSelection() {
         </div>
     );
 }
+

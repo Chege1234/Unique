@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/Components/ui/button";
@@ -19,14 +19,14 @@ export default function StaffLogin() {
 
     const checkAuthAndConfigure = async () => {
       try {
-        const authenticated = await base44.auth.isAuthenticated();
+        const authenticated = await api.auth.isAuthenticated();
 
         if (!authenticated) {
           if (!cancelled) setIsLoading(false);
           return;
         }
 
-        const currentUser = await base44.auth.me();
+        const currentUser = await api.auth.me();
 
         if (cancelled) return;
 
@@ -48,7 +48,7 @@ export default function StaffLogin() {
         setDebugInfo(`Looking for approved request with email: ${currentUser.email}`);
 
         try {
-          const allRequests = await base44.entities.StaffRequest.list();
+          const allRequests = await api.entities.StaffRequest.list();
           if (cancelled) return;
           setDebugInfo(prev => prev + `\n\nFound ${allRequests.length} total requests`);
 
@@ -61,7 +61,7 @@ export default function StaffLogin() {
             setDebugInfo(prev => prev + `\n\nFound approved request for ${approvedRequest.email}, department: ${approvedRequest.department}`);
             setConfigMessage("Configuring your staff account...");
 
-            await base44.auth.updateMe({
+            await api.auth.updateMe({
               department: approvedRequest.department,
               phone: approvedRequest.phone || ""
             });
@@ -105,7 +105,7 @@ export default function StaffLogin() {
   }, [navigate]);
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl("StaffLogin"));
+    api.auth.redirectToLogin(createPageUrl("StaffLogin"));
   };
 
   const handleRequestAccess = () => {
@@ -161,7 +161,7 @@ export default function StaffLogin() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => base44.auth.logout()}
+                    onClick={() => api.auth.logout()}
                     className="flex-1 h-12 text-base font-medium"
                   >
                     Sign Out
@@ -235,3 +235,4 @@ export default function StaffLogin() {
     </div>
   );
 }
+

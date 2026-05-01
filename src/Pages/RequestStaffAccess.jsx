@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { supabase } from "@/api/supabaseClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ export default function RequestStaffAccess() {
 
   const { data: departments = [], isLoading: isLoadingDepartments } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.filter({ is_active: true })
+    queryFn: () => api.entities.Department.filter({ is_active: true })
   });
 
   const createRequestMutation = useMutation({
@@ -62,7 +62,7 @@ export default function RequestStaffAccess() {
       await supabase.auth.signOut();
 
       // 3. Create the staff request for admins to approve
-      return base44.entities.StaffRequest.create({
+      return api.entities.StaffRequest.create({
         ...rest,
         phone: rest.phone || null,
         status: 'pending'
@@ -339,3 +339,4 @@ export default function RequestStaffAccess() {
     </div>
   );
 }
+

@@ -4,7 +4,7 @@ import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { Alert, AlertDescription } from "@/Components/ui/alert";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { supabase } from "@/api/supabaseClient";
 import { CheckCircle2, XCircle, Mail, Phone, Clock, User, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
@@ -185,49 +185,92 @@ export default function StaffRequestManager({ requests }) {
         </CardContent>
       </Card>
 
-      {/* Confirmation Dialog */}
+      {/* Premium Confirmation Dialog */}
       <Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {actionType === 'approve' ? 'Approve' : 'Reject'} Staff Request
-            </DialogTitle>
-            <DialogDescription>
-              {actionType === 'approve'
-                ? "This will approve the request and automatically update the user's role to Staff. They will be able to log in and access the Staff Dashboard immediately."
-                : 'Are you sure you want to reject this staff access request?'}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedRequest && (
-            <div className="py-4">
-              <div className="space-y-2">
-                <p><strong>Name:</strong> {selectedRequest.full_name}</p>
-                <p><strong>Email:</strong> {selectedRequest.email}</p>
-                <p><strong>Department:</strong> {selectedRequest.department}</p>
+        <DialogContent className="glass-card border-white/10 text-white max-w-lg p-0 overflow-hidden">
+          <div className={`p-8 border-b border-white/5 bg-gradient-to-r ${actionType === 'approve' ? 'from-green-600/20 to-emerald-600/20' : 'from-red-600/20 to-rose-600/20'}`}>
+            <DialogHeader>
+              <div className="flex items-center gap-6">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-2xl ${actionType === 'approve' ? 'bg-green-500 shadow-green-500/20' : 'bg-red-500 shadow-red-500/20'}`}>
+                  {actionType === 'approve' ? <CheckCircle2 className="w-8 h-8 text-white" /> : <XCircle className="w-8 h-8 text-white" />}
+                </div>
+                <div>
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter">
+                    {actionType === 'approve' ? 'Authorize Access' : 'Deny Access'}
+                  </DialogTitle>
+                  <DialogDescription className="text-blue-100/40 font-bold uppercase text-[10px] tracking-widest mt-1">
+                    System Security Protocol
+                  </DialogDescription>
+                </div>
               </div>
-            </div>
-          )}
-          {approveError && (
-            <Alert className="border-red-500/30 bg-red-500/10 mb-2">
-              <AlertCircle className="h-4 w-4 text-red-400" />
-              <AlertDescription className="text-red-400 text-xs font-semibold ml-2">
-                {approveError}
-              </AlertDescription>
-            </Alert>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setSelectedRequest(null); setApproveError(''); }}>
-              Cancel
-            </Button>
-            <Button
-              onClick={confirmAction}
-              className={actionType === 'approve' ? 'bg-green-500 hover:bg-green-600' : ''}
-              variant={actionType === 'reject' ? 'destructive' : 'default'}
-              disabled={isPending}
-            >
-              {isPending ? 'Processing...' : `Confirm ${actionType === 'approve' ? 'Approval' : 'Rejection'}`}
-            </Button>
-          </DialogFooter>
+            </DialogHeader>
+          </div>
+
+          <div className="p-8 space-y-6">
+            {selectedRequest && (
+              <div className="space-y-4">
+                <div className="p-6 bg-white/5 border border-white/10 rounded-2xl space-y-4">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                    <span className="text-[10px] font-black text-blue-100/20 uppercase tracking-widest">Candidate Name</span>
+                    <span className="text-sm font-black text-white uppercase">{selectedRequest.full_name}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                    <span className="text-[10px] font-black text-blue-100/20 uppercase tracking-widest">Target Department</span>
+                    <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 font-black uppercase text-[9px] tracking-[0.2em]">{selectedRequest.department}</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black text-blue-100/20 uppercase tracking-widest">Identification</span>
+                    <span className="text-xs font-medium text-blue-100/60 lowercase">{selectedRequest.email}</span>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                  <p className="text-[10px] font-medium text-blue-400/80 leading-relaxed text-center italic">
+                    {actionType === 'approve' 
+                      ? "Approval will grant immediate administrative privileges to the Staff Dashboard for the specified department."
+                      : "Rejection will terminate this request and the candidate will need to re-apply for access."}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {approveError && (
+              <Alert className="border-red-500/30 bg-red-500/10">
+                <AlertCircle className="h-4 w-4 text-red-400" />
+                <AlertDescription className="text-red-400 text-[10px] font-black uppercase tracking-widest ml-2">
+                  {approveError}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <DialogFooter className="flex gap-4 sm:justify-between items-center pt-4">
+              <Button 
+                variant="ghost" 
+                onClick={() => { setSelectedRequest(null); setApproveError(''); }}
+                className="h-14 flex-1 text-white/40 hover:text-white hover:bg-white/5 font-black uppercase tracking-widest text-[10px] transition-all"
+              >
+                Abort Mission
+              </Button>
+              <Button
+                onClick={confirmAction}
+                disabled={isPending}
+                className={`h-14 flex-[2] font-black uppercase tracking-[0.3em] text-[10px] rounded-xl shadow-2xl transition-all active:scale-[0.98] ${
+                  actionType === 'approve' 
+                    ? 'bg-green-600 hover:bg-green-500 text-white shadow-green-600/20' 
+                    : 'bg-red-600 hover:bg-red-500 text-white shadow-red-600/20'
+                }`}
+              >
+                {isPending ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    Processing...
+                  </span>
+                ) : (
+                  `Confirm ${actionType === 'approve' ? 'Authorization' : 'Rejection'}`
+                )}
+              </Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </>

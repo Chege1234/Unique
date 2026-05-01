@@ -58,7 +58,7 @@ smart-queue/
     │   └── common/                   # Shared cross-role components
     ├── api/
     │   ├── supabaseClient.js        # Supabase client initialisation
-    │   └── base44Client.js          # Data access helpers (CRUD wrappers)
+    │   └── apiClient.js             # Data access helpers (CRUD wrappers)
     ├── constants/
     │   └── index.js                 # App-wide constants (departments, statuses, etc.)
     ├── hooks/

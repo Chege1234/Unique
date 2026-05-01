@@ -1,5 +1,5 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -27,11 +27,11 @@ export default function StudentDashboard() {
 
   React.useEffect(() => {
     const fetchUser = async () => {
-      const currentUser = await base44.auth.me();
+      const currentUser = await api.auth.me();
       // Only set user if they are a student (e.g., has student_id or similar role check)
       // For this system, we'll assume if they logged in they are a student unless specified otherwise.
       // A more robust solution would check user.roles or a specific attribute.
-      // The current implementation of base44.auth.me() usually returns the currently logged in user
+      // The current implementation of api.auth.me() usually returns the currently logged in user
       // irrespective of role for display purposes, but filtering tickets will only work for students.
       // If a staff logs in, `user.email` won't match `student_id` in QueueTicket, so myTickets will be empty.
       setUser(currentUser);
@@ -41,7 +41,7 @@ export default function StudentDashboard() {
 
   const { data: myTickets = [], refetch } = useQuery({
     queryKey: ['myTickets', user?.email],
-    queryFn: () => base44.entities.QueueTicket.filter(
+    queryFn: () => api.entities.QueueTicket.filter(
       { student_email: user?.email },
       '-created_date'
     ),
@@ -206,3 +206,4 @@ export default function StudentDashboard() {
     </div>
   );
 }
+

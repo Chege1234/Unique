@@ -88,3 +88,4 @@ export default function WaitingQueue({ tickets, onCallNext, isCallingNext }) {
     </div>
   );
 }
+

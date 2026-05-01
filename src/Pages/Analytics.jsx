@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -32,19 +32,19 @@ export default function Analytics() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const authenticated = await base44.auth.isAuthenticated();
+        const authenticated = await api.auth.isAuthenticated();
         if (!authenticated) {
-          base44.auth.redirectToLogin(createPageUrl("Analytics"));
+          api.auth.redirectToLogin(createPageUrl("Analytics"));
           return;
         }
-        const currentUser = await base44.auth.me();
+        const currentUser = await api.auth.me();
         if (currentUser.role !== 'admin') {
           navigate(createPageUrl("Home"));
           return;
         }
         setUser(currentUser);
       } catch (error) {
-        base44.auth.redirectToLogin(createPageUrl("Analytics"));
+        api.auth.redirectToLogin(createPageUrl("Analytics"));
       } finally {
         setIsLoading(false);
       }
@@ -54,13 +54,13 @@ export default function Analytics() {
 
   const { data: allTickets = [] } = useQuery({
     queryKey: ['allTickets'],
-    queryFn: () => base44.entities.QueueTicket.list(),
+    queryFn: () => api.entities.QueueTicket.list(),
     enabled: !!user
   });
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.list(),
+    queryFn: () => api.entities.Department.list(),
     enabled: !!user
   });
 
@@ -302,3 +302,4 @@ export default function Analytics() {
     </div>
   );
 }
+

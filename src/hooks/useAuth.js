@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { api } from '@/api/apiClient';
 
 /**
  * Custom hook for authentication and role-based access control.
@@ -20,14 +20,14 @@ export const useAuth = (requiredRole = null, redirectPath = '/') => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const authenticated = await base44.auth.isAuthenticated();
+                const authenticated = await api.auth.isAuthenticated();
 
                 if (!authenticated) {
-                    base44.auth.redirectToLogin(window.location.pathname);
+                    api.auth.redirectToLogin(window.location.pathname);
                     return;
                 }
 
-                const currentUser = await base44.auth.me();
+                const currentUser = await api.auth.me();
 
                 if (!currentUser) {
                     throw new Error('User data not found');
@@ -55,3 +55,4 @@ export const useAuth = (requiredRole = null, redirectPath = '/') => {
 
     return { user, isLoading, error };
 };
+

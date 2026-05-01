@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -30,19 +30,19 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const authenticated = await base44.auth.isAuthenticated();
+        const authenticated = await api.auth.isAuthenticated();
         if (!authenticated) {
-          base44.auth.redirectToLogin(createPageUrl("AdminDashboard"));
+          api.auth.redirectToLogin(createPageUrl("AdminDashboard"));
           return;
         }
-        const currentUser = await base44.auth.me();
+        const currentUser = await api.auth.me();
         if (currentUser.role !== 'admin') {
           navigate(createPageUrl("Home"));
           return;
         }
         setUser(currentUser);
       } catch (error) {
-        base44.auth.redirectToLogin(createPageUrl("AdminDashboard"));
+        api.auth.redirectToLogin(createPageUrl("AdminDashboard"));
       } finally {
         setIsLoading(false);
       }
@@ -52,26 +52,26 @@ export default function AdminDashboard() {
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.list(),
+    queryFn: () => api.entities.Department.list(),
     enabled: !!user
   });
 
   const { data: allTickets = [] } = useQuery({
     queryKey: ['allTickets'],
-    queryFn: () => base44.entities.QueueTicket.list(),
+    queryFn: () => api.entities.QueueTicket.list(),
     refetchInterval: 5000,
     enabled: !!user
   });
 
   const { data: users = [] } = useQuery({
     queryKey: ['users'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => api.entities.User.list(),
     enabled: !!user
   });
 
   const { data: staffRequests = [] } = useQuery({
     queryKey: ['staffRequests'],
-    queryFn: () => base44.entities.StaffRequest.list('-created_date'),
+    queryFn: () => api.entities.StaffRequest.list('-created_date'),
     enabled: !!user
   });
 
@@ -213,3 +213,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

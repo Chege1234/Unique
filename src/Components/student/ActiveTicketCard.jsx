@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { Clock, Users, Hash, XCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
@@ -12,7 +12,7 @@ export default function ActiveTicketCard({ ticket, onUpdate }) {
   const queryClient = useQueryClient();
 
   const cancelMutation = useMutation({
-    mutationFn: () => base44.entities.QueueTicket.update(ticket.id, { status: 'cancelled' }),
+    mutationFn: () => api.entities.QueueTicket.update(ticket.id, { status: 'cancelled' }),
     onSuccess: () => {
       queryClient.invalidateQueries(['myTickets']);
       onUpdate();

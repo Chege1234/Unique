@@ -8,7 +8,7 @@ const applyOrder = (query, orderBy) => {
     return query.order(column, { ascending: !isDesc });
 };
 
-export const base44 = {
+export const api = {
     auth: {
         isAuthenticated: async () => {
             const { data: { session } } = await supabase.auth.getSession();
@@ -180,3 +180,4 @@ export const base44 = {
         }
     }
 };
+

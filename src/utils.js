@@ -21,3 +21,4 @@ export function createPageUrl(name) {
     };
     return mapping[name] || `/${name.toLowerCase()}`;
 }
+

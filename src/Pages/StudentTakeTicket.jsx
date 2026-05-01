@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -37,18 +37,18 @@ export default function StudentTakeTicket() {
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.filter({ is_active: true })
+    queryFn: () => api.entities.Department.filter({ is_active: true })
   });
 
   const { data: allTickets = [] } = useQuery({
     queryKey: ['allTickets'],
-    queryFn: () => base44.entities.QueueTicket.list(),
+    queryFn: () => api.entities.QueueTicket.list(),
     refetchInterval: 5000
   });
 
   const { data: myTickets = [] } = useQuery({
     queryKey: ['myTickets', studentNumber],
-    queryFn: () => base44.entities.QueueTicket.filter({ student_email: `${studentNumber}@student.edu` }),
+    queryFn: () => api.entities.QueueTicket.filter({ student_email: `${studentNumber}@student.edu` }),
     enabled: !!studentNumber
   });
 
@@ -56,7 +56,7 @@ export default function StudentTakeTicket() {
 
   const createTicketMutation = useMutation({
     mutationFn: async (departmentId) => {
-      return base44.entities.QueueTicket.createViaRpc(
+      return api.entities.QueueTicket.createViaRpc(
         `${studentNumber}@student.edu`,
         `Student ${studentNumber}`,
         departmentId
@@ -241,3 +241,4 @@ export default function StudentTakeTicket() {
     </div>
   );
 }
+

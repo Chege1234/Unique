@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import {
   Users,
   BarChart3,
@@ -27,7 +27,7 @@ export default function Layout({ children, currentPageName }) {
     const fetchUser = async () => {
       setUserLoading(true);
       try {
-        const currentUser = await base44.auth.me();
+        const currentUser = await api.auth.me();
         setUser(currentUser);
       } catch (error) {
         setUser(null);
@@ -39,7 +39,7 @@ export default function Layout({ children, currentPageName }) {
   }, [location.pathname]);
 
   const handleLogout = async () => {
-    await base44.auth.logout();
+    await api.auth.logout();
     navigate(createPageUrl("Home"));
   };
 

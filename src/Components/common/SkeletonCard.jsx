@@ -23,3 +23,4 @@ export const SkeletonGrid = ({ count = 4 }) => (
 );
 
 export default SkeletonCard;
+

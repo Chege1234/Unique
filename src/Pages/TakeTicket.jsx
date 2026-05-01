@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/apiClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom"; // Add Link import
 import { createPageUrl } from "@/utils";
@@ -29,7 +29,7 @@ export default function TakeTicket() {
 
   React.useEffect(() => {
     const fetchUser = async () => {
-      const currentUser = await base44.auth.me();
+      const currentUser = await api.auth.me();
       if (currentUser) {
         setUser(currentUser);
         // Redirect staff accounts immediately
@@ -46,7 +46,7 @@ export default function TakeTicket() {
 
   const { data: myTickets = [], refetch: refetchMyTickets } = useQuery({
     queryKey: ['myTickets', user?.email],
-    queryFn: () => base44.entities.QueueTicket.filter(
+    queryFn: () => api.entities.QueueTicket.filter(
       { student_email: user?.email },
       '-created_date' // Order by most recent
     ),
@@ -58,12 +58,12 @@ export default function TakeTicket() {
 
   const { data: departments = [] } = useQuery({
     queryKey: ['departments'],
-    queryFn: () => base44.entities.Department.filter({ is_active: true })
+    queryFn: () => api.entities.Department.filter({ is_active: true })
   });
 
   const { data: allTickets = [] } = useQuery({
     queryKey: ['allTickets'],
-    queryFn: () => base44.entities.QueueTicket.list(),
+    queryFn: () => api.entities.QueueTicket.list(),
     refetchInterval: 5000
   });
 
@@ -72,7 +72,7 @@ export default function TakeTicket() {
       if (!user) {
         throw new Error("User not logged in to create a ticket.");
       }
-      return base44.entities.QueueTicket.createViaRpc(
+      return api.entities.QueueTicket.createViaRpc(
         user.email,
         user.full_name,
         departmentId
@@ -296,3 +296,4 @@ export default function TakeTicket() {
     </div>
   );
 }
+
