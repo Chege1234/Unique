@@ -6,19 +6,41 @@ import Layout from './Layout.jsx';
 import ErrorBoundary from './Components/ErrorBoundary.jsx';
 import { Loader2 } from 'lucide-react';
 
+// Helper function to retry lazy imports.
+// This catches "Failed to fetch dynamically imported module" errors which happen 
+// when the app is updated but the user's browser has an old index.html cached pointing to old chunks.
+const lazyWithRetry = (componentImport) =>
+  lazy(async () => {
+    const pageHasAlreadyBeenForceRefreshed = JSON.parse(
+      window.sessionStorage.getItem('page-has-been-force-refreshed') || 'false'
+    );
+
+    try {
+      const component = await componentImport();
+      window.sessionStorage.setItem('page-has-been-force-refreshed', 'false');
+      return component;
+    } catch (error) {
+      if (!pageHasAlreadyBeenForceRefreshed) {
+        window.sessionStorage.setItem('page-has-been-force-refreshed', 'true');
+        return window.location.reload();
+      }
+      throw error;
+    }
+  });
+
 // Lazy-load all pages for better initial load performance
-const AdminDashboard = lazy(() => import('./Pages/AdminDashboard.jsx'));
-const Analytics = lazy(() => import('./Pages/Analytics.jsx'));
-const Home = lazy(() => import('./Pages/Home.jsx'));
-const RequestStaffAccess = lazy(() => import('./Pages/RequestStaffAccess.jsx'));
-const RoleSelection = lazy(() => import('./Pages/RoleSelection.jsx'));
-const StaffDashboard = lazy(() => import('./Pages/StaffDashboard.jsx'));
-const StaffLogin = lazy(() => import('./Pages/StaffLogin.jsx'));
-const Login = lazy(() => import('./Pages/Login.jsx'));
-const StudentDashboard = lazy(() => import('./Pages/StudentDashboard.jsx'));
-const StudentTakeTicket = lazy(() => import('./Pages/StudentTakeTicket.jsx'));
-const StudentTicketView = lazy(() => import('./Pages/StudentTicketView.jsx'));
-const TakeTicket = lazy(() => import('./Pages/TakeTicket.jsx'));
+const AdminDashboard = lazyWithRetry(() => import('./Pages/AdminDashboard.jsx'));
+const Analytics = lazyWithRetry(() => import('./Pages/Analytics.jsx'));
+const Home = lazyWithRetry(() => import('./Pages/Home.jsx'));
+const RequestStaffAccess = lazyWithRetry(() => import('./Pages/RequestStaffAccess.jsx'));
+const RoleSelection = lazyWithRetry(() => import('./Pages/RoleSelection.jsx'));
+const StaffDashboard = lazyWithRetry(() => import('./Pages/StaffDashboard.jsx'));
+const StaffLogin = lazyWithRetry(() => import('./Pages/StaffLogin.jsx'));
+const Login = lazyWithRetry(() => import('./Pages/Login.jsx'));
+const StudentDashboard = lazyWithRetry(() => import('./Pages/StudentDashboard.jsx'));
+const StudentTakeTicket = lazyWithRetry(() => import('./Pages/StudentTakeTicket.jsx'));
+const StudentTicketView = lazyWithRetry(() => import('./Pages/StudentTicketView.jsx'));
+const TakeTicket = lazyWithRetry(() => import('./Pages/TakeTicket.jsx'));
 
 const queryClient = new QueryClient({
     defaultOptions: {
