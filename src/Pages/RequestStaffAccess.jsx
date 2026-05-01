@@ -42,6 +42,7 @@ export default function RequestStaffAccess() {
       // (The admin will create the account separately).
       return base44.entities.StaffRequest.create({
         ...rest,
+        phone: rest.phone || null,
         status: 'pending'
       });
     },
