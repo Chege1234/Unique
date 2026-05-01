@@ -44,7 +44,14 @@ export default function StaffRequestManager({ requests }) {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id }) => base44.entities.StaffRequest.update(id, { status: 'rejected' }),
+    mutationFn: async ({ id }) => {
+      const { data, error } = await supabase.functions.invoke('reject-staff', {
+        body: { request_id: id },
+      });
+      if (error) throw new Error(error.message || 'Edge function error');
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['staffRequests']);
       setSelectedRequest(null);
