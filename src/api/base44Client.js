@@ -168,7 +168,7 @@ export const base44 = {
                 return data || [];
             },
             create: async (payload) => {
-                const { data, error } = await supabase.from('staff_requests').insert([payload]).select().single();
+                const { data, error } = await supabase.from('staff_requests').insert([payload]);
                 if (error) throw error;
                 return data;
             },
